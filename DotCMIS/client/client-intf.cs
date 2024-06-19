@@ -267,6 +267,9 @@ namespace DotCMIS.Client
                 IList<IAce> removeAces);
         IObjectId CreateRelationship(IDictionary<string, object> properties);
 
+        IEnumerable<IObjectId> BulkUpdate(IDictionary<string, object> properties, IList<IPolicy> policies, IList<IAce> addAces, IList<IAce> removeAces);
+        IEnumerable<IObjectId> BulkUpdate(IDictionary<string, object> properties);
+
         IItemEnumerable<IRelationship> GetRelationships(IObjectId objectId, bool includeSubRelationshipTypes,
                 RelationshipDirection? relationshipDirection, IObjectType type, IOperationContext context);
 

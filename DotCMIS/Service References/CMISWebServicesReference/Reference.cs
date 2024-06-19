@@ -3558,6 +3558,12 @@ namespace DotCMIS.CMISWebServicesReference {
     [System.ServiceModel.ServiceContractAttribute(Namespace="http://docs.oasis-open.org/ns/cmis/ws/200908/", ConfigurationName="CMISWebServicesReference.ObjectServicePort")]
     internal interface ObjectServicePort {
         
+		[System.ServiceModel.OperationContractAttribute(Action="", ReplyAction="*")]
+		[System.ServiceModel.FaultContractAttribute(typeof(DotCMIS.CMISWebServicesReference.cmisFaultType), Action="", Name="cmisFault", Namespace="http://docs.oasis-open.org/ns/cmis/messaging/200908/")]
+		[System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+		[System.ServiceModel.ServiceKnownTypeAttribute(typeof(cmisProperty))]
+		DotCMIS.CMISWebServicesReference.bulkUpdateResponse bulkUpdate(DotCMIS.CMISWebServicesReference.bulkUpdateRequest request);
+		
         // CODEGEN: Generating message contract since the wrapper namespace (http://docs.oasis-open.org/ns/cmis/messaging/200908/) of message createDocumentRequest does not match the default value (http://docs.oasis-open.org/ns/cmis/ws/200908/)
         [System.ServiceModel.OperationContractAttribute(Action="", ReplyAction="*")]
         [System.ServiceModel.FaultContractAttribute(typeof(DotCMIS.CMISWebServicesReference.cmisFaultType), Action="", Name="cmisFault", Namespace="http://docs.oasis-open.org/ns/cmis/messaging/200908/")]
@@ -4129,6 +4135,69 @@ namespace DotCMIS.CMISWebServicesReference {
             this.extension = extension;
         }
     }
+	
+	[System.Diagnostics.DebuggerStepThroughAttribute()]
+	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+	[System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+	[System.ServiceModel.MessageContractAttribute(WrapperName="bulkUpdate", WrapperNamespace="http://docs.oasis-open.org/ns/cmis/messaging/200908/", IsWrapped=true)]
+	internal partial class bulkUpdateRequest {
+
+		[System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://docs.oasis-open.org/ns/cmis/messaging/200908/", Order=0)]
+		public string repositoryId;
+
+		[System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://docs.oasis-open.org/ns/cmis/messaging/200908/", Order=1)]
+		public DotCMIS.CMISWebServicesReference.cmisPropertiesType properties;
+
+		[System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://docs.oasis-open.org/ns/cmis/messaging/200908/", Order=3)]
+		[System.Xml.Serialization.XmlElementAttribute("policies", IsNullable=true)]
+		public string[] policies;
+
+		[System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://docs.oasis-open.org/ns/cmis/messaging/200908/", Order=4)]
+		[System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
+		public DotCMIS.CMISWebServicesReference.cmisAccessControlListType addACEs;
+
+		[System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://docs.oasis-open.org/ns/cmis/messaging/200908/", Order=5)]
+		[System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
+		public DotCMIS.CMISWebServicesReference.cmisAccessControlListType removeACEs;
+
+		[System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://docs.oasis-open.org/ns/cmis/messaging/200908/", Order=6)]
+		[System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
+		public DotCMIS.CMISWebServicesReference.cmisExtensionType extension;
+
+		public bulkUpdateRequest() {
+		}
+
+		public bulkUpdateRequest(string repositoryId, DotCMIS.CMISWebServicesReference.cmisPropertiesType properties, string[] policies, DotCMIS.CMISWebServicesReference.cmisAccessControlListType addACEs, DotCMIS.CMISWebServicesReference.cmisAccessControlListType removeACEs, DotCMIS.CMISWebServicesReference.cmisExtensionType extension) {
+			this.repositoryId = repositoryId;
+			this.properties = properties;
+			this.policies = policies;
+			this.addACEs = addACEs;
+			this.removeACEs = removeACEs;
+			this.extension = extension;
+		}
+	}
+
+	[System.Diagnostics.DebuggerStepThroughAttribute()]
+	[System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+	[System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+	[System.ServiceModel.MessageContractAttribute(WrapperName="bulkUpdateResponse", WrapperNamespace="http://docs.oasis-open.org/ns/cmis/messaging/200908/", IsWrapped=true)]
+	internal partial class bulkUpdateResponse {
+
+		[System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://docs.oasis-open.org/ns/cmis/messaging/200908/", Order=0)]
+		public string[] objectId;
+
+		[System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://docs.oasis-open.org/ns/cmis/messaging/200908/", Order=1)]
+		[System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
+		public DotCMIS.CMISWebServicesReference.cmisExtensionType extension;
+
+		public bulkUpdateResponse() {
+		}
+
+		public bulkUpdateResponse(string[] objectId, DotCMIS.CMISWebServicesReference.cmisExtensionType extension) {
+			this.objectId = objectId;
+			this.extension = extension;
+		}
+	}	
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -5157,6 +5226,24 @@ namespace DotCMIS.CMISWebServicesReference {
         DotCMIS.CMISWebServicesReference.updatePropertiesResponse DotCMIS.CMISWebServicesReference.ObjectServicePort.updateProperties(DotCMIS.CMISWebServicesReference.updatePropertiesRequest request) {
             return base.Channel.updateProperties(request);
         }
+		
+		[System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+		DotCMIS.CMISWebServicesReference.bulkUpdateResponse DotCMIS.CMISWebServicesReference.ObjectServicePort.bulkUpdate(DotCMIS.CMISWebServicesReference.bulkUpdateRequest request) {
+			return base.Channel.bulkUpdate(request);
+		}
+
+		public string[] bulkUpdate(string repositoryId, DotCMIS.CMISWebServicesReference.cmisPropertiesType properties, string[] policies, DotCMIS.CMISWebServicesReference.cmisAccessControlListType addACEs, DotCMIS.CMISWebServicesReference.cmisAccessControlListType removeACEs, ref DotCMIS.CMISWebServicesReference.cmisExtensionType extension) {
+			DotCMIS.CMISWebServicesReference.bulkUpdateRequest inValue = new DotCMIS.CMISWebServicesReference.bulkUpdateRequest();
+			inValue.repositoryId = repositoryId;
+			inValue.properties = properties;
+			inValue.policies = policies;
+			inValue.addACEs = addACEs;
+			inValue.removeACEs = removeACEs;
+			inValue.extension = extension;
+			DotCMIS.CMISWebServicesReference.bulkUpdateResponse retVal = ((DotCMIS.CMISWebServicesReference.ObjectServicePort)(this)).bulkUpdate(inValue);
+			extension = retVal.extension;
+			return retVal.objectId;
+		}
         
         public void updateProperties(string repositoryId, ref string objectId, ref string changeToken, DotCMIS.CMISWebServicesReference.cmisPropertiesType properties, ref DotCMIS.CMISWebServicesReference.cmisExtensionType extension) {
             DotCMIS.CMISWebServicesReference.updatePropertiesRequest inValue = new DotCMIS.CMISWebServicesReference.updatePropertiesRequest();

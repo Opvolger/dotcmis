@@ -906,6 +906,29 @@ namespace DotCMIS.Client.Impl
             return CreateRelationship(properties, null, null, null);
         }
 
+        public IEnumerable<IObjectId> BulkUpdate(IDictionary<string, object> properties, IList<IPolicy> policies, IList<IAce> addAces,
+    IList<IAce> removeAces)
+        {
+            if (properties == null || properties.Count == 0)
+            {
+                throw new ArgumentException("Properties must not be empty!");
+            }
+
+            var newIds = Binding.GetObjectService().BulkUpdate(RepositoryId, ObjectFactory.ConvertProperties(properties, null, CreateUpdatability),
+                ObjectFactory.ConvertPolicies(policies), ObjectFactory.ConvertAces(addAces), ObjectFactory.ConvertAces(removeAces), null);
+
+            var idList = new List<IObjectId>();
+            foreach (var newId in newIds)
+            {
+                idList.Add(CreateObjectId(newId));
+            }
+            return idList;
+        }
+        public IEnumerable<IObjectId> BulkUpdate(IDictionary<string, object> properties)
+        {
+            return BulkUpdate(properties, null, null, null);
+        }
+
         public IItemEnumerable<IRelationship> GetRelationships(IObjectId objectId, bool includeSubRelationshipTypes,
                 RelationshipDirection? relationshipDirection, IObjectType type, IOperationContext context)
         {

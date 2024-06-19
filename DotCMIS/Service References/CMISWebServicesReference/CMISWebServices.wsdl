@@ -111,6 +111,12 @@
   <message name="createPolicyResponse">
     <part name="parameters" element="cmism:createPolicyResponse" />
   </message>
+  <message name="bulkUpdateRequest">
+    <part name="parameters" element="cmism:bulkUpdate" />
+  </message>
+  <message name="bulkUpdateResponse">
+    <part name="parameters" element="cmism:bulkUpdateResponse" />
+  </message>
   <message name="getAllowableActionsRequest">
     <part name="parameters" element="cmism:getAllowableActions" />
   </message>
@@ -353,6 +359,11 @@
     <operation name="createPolicy">
       <input message="cmisw:createPolicyRequest" />
       <output message="cmisw:createPolicyResponse" />
+      <fault name="cmisException" message="cmisw:cmisException" />
+    </operation>
+	<operation name="bulkUpdate">
+      <input message="cmisw:bulkUpdateRequest" />
+      <output message="cmisw:bulkUpdateResponse" />
       <fault name="cmisException" message="cmisw:cmisException" />
     </operation>
     <operation name="getAllowableActions">
@@ -702,6 +713,18 @@
         <soap:fault use="literal" name="cmisException" namespace="" />
       </fault>
     </operation>
+	<operation name="bulkUpdate">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+      <fault name="cmisException">
+        <soap:fault use="literal" name="cmisException" namespace="" />
+      </fault>
+	</operation>
     <operation name="getAllowableActions">
       <soap:operation soapAction="" />
       <input>

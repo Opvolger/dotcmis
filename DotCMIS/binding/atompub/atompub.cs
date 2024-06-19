@@ -1829,6 +1829,40 @@ namespace DotCMIS.Binding.AtomPub
             return entry.Id;
         }
 
+        public IEnumerable<string> BulkUpdate(string repositoryId, IProperties properties, IList<string> policies, IAcl addAces, IAcl removeAces,
+    IExtensionsData extension)
+        {
+            // CheckCreateProperties(properties);
+
+            // find the link
+            var link = LoadTemplateLink(repositoryId, AtomPubConstants.TemplateBulkUpdate, null);
+            if (link == null)
+            {
+                ThrowLinkException(repositoryId, "ROOTFOLDER", AtomPubConstants.RelDown, AtomPubConstants.MediatypeChildren);
+            }
+
+            var url = new UrlBuilder(link);
+
+            // set up object and writer
+            cmisObjectType cmisObject = CreateObject(properties, null, policies);
+
+            AtomEntryWriter entryWriter = new AtomEntryWriter(cmisObject);
+
+            // post the new folder object
+            HttpUtils.Response resp = Post(url, AtomPubConstants.MediatypeEntry, new HttpUtils.Output(entryWriter.Write));
+
+            // parse the response
+            var entries = Parse<AtomFeed>(resp.Stream);
+            var ids = new List<string>();
+            foreach (var entry in entries.GetEntries())
+            {
+                // handle ACL modifications
+                HandleAclModifications(repositoryId, entry, addAces, removeAces);
+                ids.Add(entry.Id);
+            }
+            return ids;
+        }
+
         public IAllowableActions GetAllowableActions(string repositoryId, string objectId, IExtensionsData extension)
         {
             // find the link

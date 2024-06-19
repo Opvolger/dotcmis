@@ -245,6 +245,7 @@ namespace DotCMIS
         public const string TemplateObjectByPath = "objectbypath";
         public const string TemplateTypeById = "typebyid";
         public const string TemplateQuery = "query";
+        public const string TemplateBulkUpdate = "bulkupdate";
 
         // Link rel
         public const string RelSelf = "self";

@@ -276,10 +276,10 @@ namespace DotCMIS.Client.Impl
                 }
                 else if (value is IList)
                 {
-                    if (definition.Cardinality != Cardinality.Multi)
-                    {
-                        throw new ArgumentException("Property '" + id + "' is not a multi value property!");
-                    }
+                    //if (definition.Cardinality != Cardinality.Multi)
+                    //{
+                    //    throw new ArgumentException("Property '" + id + "' is not a multi value property!");
+                    //}
 
                     IList valueList = (IList)value;
 
