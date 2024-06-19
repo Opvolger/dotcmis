@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <ProductVersion>8.0.30703</ProductVersion>
+    <ProductVersion>8.0.30704</ProductVersion>
     <ProjectGuid>{B4343D5F-BA78-4925-99C5-A0FFD80F862C}</ProjectGuid>
     <TargetFrameworks>net48;net6;net8</TargetFrameworks>
     <AssemblyTitle>DotCMIS Unit Tests</AssemblyTitle>

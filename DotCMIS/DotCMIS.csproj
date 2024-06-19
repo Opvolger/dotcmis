@@ -1,14 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <ProductVersion>8.0.30703</ProductVersion>
+    <ProductVersion>8.0.30704</ProductVersion>
     <ProjectGuid>{529EF90F-A34C-4426-A4F9-65113AC23841}</ProjectGuid>
     <TargetFrameworks>net48;net6;net8</TargetFrameworks>
     <LangVersion>latest</LangVersion>
     <AssemblyTitle>DotCMIS</AssemblyTitle>
     <Company>Apache Software Foundation</Company>
     <Product>DotCMIS</Product>
-    <AssemblyVersion>0.7.0.0</AssemblyVersion>
-    <FileVersion>0.7.0.0</FileVersion>
+    <OutputType>Library</OutputType>
+    <AssemblyVersion>0.8.0.0</AssemblyVersion>
+    <FileVersion>0.8.0.0</FileVersion>
+    <PackageVersion>0.8.0.0</PackageVersion>
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <DocumentationFile>bin\$(Configuration)\DotCMIS.XML</DocumentationFile>
     <NoWarn>1591</NoWarn>
