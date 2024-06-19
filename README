@@ -2,7 +2,7 @@ Apache Chemistry DotCMIS 0.8
 ============================
 
 Apache Chemistry DotCMIS is a Content Management Interoperability Services (CMIS)
-client library for the .NET framework 4.8 or higher and dotnet 8.
+client library for the .NET framework 4.7.2 or higher and dotnet 8.
 
 See http://chemistry.apache.org/dotnet/dotcmis.html for more information.
 

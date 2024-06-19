@@ -70,20 +70,15 @@ namespace DotCMISUnitTest
 
         public ISession ConnectFromConfig()
         {
-            Dictionary<string, string> parameters = new Dictionary<string, string>();
+            Dictionary<string, string> parameters = AppSettingsHelper.GetDictionaryAppSettings();
 
-            foreach (string key in ConfigurationManager.AppSettings.AllKeys)
-            {
-                parameters[key] = ConfigurationManager.AppSettings.Get(key);
-            }
-
-            string documentType = ConfigurationManager.AppSettings.Get("test.documenttype");
+            string documentType = AppSettingsHelper.GetAppSetting("test.documenttype");
             if (documentType != null)
             {
                 DefaultDocumentType = documentType;
             }
 
-            string folderType = ConfigurationManager.AppSettings.Get("test.foldertype");
+            string folderType = AppSettingsHelper.GetAppSetting("test.foldertype");
             if (folderType != null)
             {
                 DefaultFolderType = folderType;
@@ -106,7 +101,7 @@ namespace DotCMISUnitTest
             Assert.That(session.RepositoryInfo, Is.Not.Null);
             Assert.That(session.RepositoryInfo.Id, Is.Not.Null);
 
-            string testRootFolderPath = ConfigurationManager.AppSettings.Get("test.rootfolder");
+            string testRootFolderPath = AppSettingsHelper.GetAppSetting("test.rootfolder");
             if (testRootFolderPath == null)
             {
                 TestFolder = session.GetRootFolder();
@@ -126,12 +121,10 @@ namespace DotCMISUnitTest
         {
             Dictionary<string, string> parameters = new Dictionary<string, string>();
 
-            string baseUrlAtom = "http://localhost:8080/alfresco/cmisatom";
-
             parameters[SessionParameter.BindingType] = BindingType.AtomPub;
-            parameters[SessionParameter.AtomPubUrl] = baseUrlAtom;
-            parameters[SessionParameter.User] = "admin";
-            parameters[SessionParameter.Password] = "admin";
+            parameters[SessionParameter.AtomPubUrl] = AppSettingsHelper.GetAppSetting(SessionParameter.AtomPubUrl);
+            parameters[SessionParameter.User] = AppSettingsHelper.GetAppSetting(SessionParameter.User);
+            parameters[SessionParameter.Password] = AppSettingsHelper.GetAppSetting(SessionParameter.Password);
 
             SessionFactory factory = SessionFactory.NewInstance();
             ISession session = factory.GetRepositories(parameters)[0].CreateSession();

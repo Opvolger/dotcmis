@@ -2,8 +2,8 @@
   <PropertyGroup>
     <ProductVersion>8.0.30703</ProductVersion>
     <ProjectGuid>{529EF90F-A34C-4426-A4F9-65113AC23841}</ProjectGuid>
-    <TargetFramework>net48</TargetFramework>
-    <LangVersion>7.3</LangVersion>
+    <TargetFrameworks>net48;net6;net8</TargetFrameworks>
+    <LangVersion>latest</LangVersion>
     <AssemblyTitle>DotCMIS</AssemblyTitle>
     <Company>Apache Software Foundation</Company>
     <Product>DotCMIS</Product>
@@ -25,7 +25,12 @@
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>dotcmis.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
-  <ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)'=='net6' Or '$(TargetFramework)'=='net8'">
+    <PackageReference Include="System.ServiceModel.Primitives" Version="6.0.0" />
+    <PackageReference Include="System.ServiceModel.Http" Version="6.0.0" />
+    <Compile Remove="binding/webservices/webservices.cs" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)'=='net48'">
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Data.DataSetExtensions" />
   </ItemGroup>

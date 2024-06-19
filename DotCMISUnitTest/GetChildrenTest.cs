@@ -19,15 +19,10 @@ namespace DotCMISUnitTest
         {
             Dictionary<string, string> parameters = new Dictionary<string, string>();
 
-            //string baseUrlAtom = "http://localhost:8080/chemistry-opencmis-server-inmemory-1.1.0/atom";
-            string baseUrlAtom = "http://localhost:8080/alfresco/cmisatom";
-           
-            string baseUrlWS = "http://localhost:8080/inmemory/services";
-
             parameters[SessionParameter.BindingType] = BindingType.AtomPub;
-            parameters[SessionParameter.AtomPubUrl] = baseUrlAtom;
-            parameters[SessionParameter.User] = "admin";
-            parameters[SessionParameter.Password] = "admin";
+            parameters[SessionParameter.AtomPubUrl] = AppSettingsHelper.GetAppSetting(SessionParameter.AtomPubUrl);
+            parameters[SessionParameter.User] = AppSettingsHelper.GetAppSetting(SessionParameter.User);
+            parameters[SessionParameter.Password] = AppSettingsHelper.GetAppSetting(SessionParameter.Password);
 
             SessionFactory factory = SessionFactory.NewInstance();
             ISession session = factory.GetRepositories(parameters)[0].CreateSession();
