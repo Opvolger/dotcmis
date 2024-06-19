@@ -546,7 +546,7 @@ namespace DotCMIS.Binding.WebServices
             Provider = provider;
         }
 
-        public IObjectInFolderList GetChildren(string repositoryId, string folderId, string filter, string orderBy,
+        public IObjectInFolderList GetChildren(string repositoryId, string folderId, string filter, Dictionary<string, string> customParameters, string orderBy,
             bool? includeAllowableActions, IncludeRelationshipsFlag? includeRelationships, string renditionFilter,
             bool? includePathSegment, long? maxItems, long? skipCount, IExtensionsData extension)
         {
@@ -736,6 +736,28 @@ namespace DotCMIS.Binding.WebServices
                     Converter.Convert(addAces), Converter.Convert(removeAces), ref cmisExtension);
 
                 Converter.ConvertExtension(cmisExtension, extension);
+
+                return objectId;
+            }
+            catch (FaultException<cmisFaultType> fe)
+            {
+                throw ConvertException(fe);
+            }
+            catch (Exception e)
+            {
+                throw new CmisRuntimeException("Error: " + e.Message, e);
+            }
+        }
+
+        public string CreateItem(string repositoryId, IProperties properties, string folderId)
+        {
+            var port = Provider.GetObjectService();
+
+            try
+            {
+                var objectId = port.createItem(repositoryId, Converter.Convert(properties), folderId);
+
+                //Converter.ConvertExtension(cmisExtension, extension);
 
                 return objectId;
             }

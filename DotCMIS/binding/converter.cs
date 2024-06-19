@@ -290,6 +290,10 @@ namespace DotCMIS.Binding
             {
                 result = new FolderTypeDefinition();
             }
+            else if (typeDef is cmisTypeItemDefinitionType)
+            {
+                result = new ItemTypeDefinitionType();
+            }
             else if (typeDef is cmisTypePolicyDefinitionType)
             {
                 result = new PolicyTypeDefinition();
@@ -1202,10 +1206,14 @@ namespace DotCMIS.Binding
                         ((cmisPropertyInteger)result).value = new string[property.Values.Count];
                         for (int i = 0; i < property.Values.Count; i++)
                         {
-                            long? value = property.Values[i] as long?;
-                            if (value.HasValue)
+                            long value;
+                            if (long.TryParse(property.Values[i].ToString(), out value))
                             {
                                 ((cmisPropertyInteger)result).value[i] = value.ToString();
+                            }
+                            else
+                            {
+                                throw new Exception("Invalid long value provided for integer field.");
                             }
                         }
                     }

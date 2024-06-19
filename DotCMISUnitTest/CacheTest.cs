@@ -48,22 +48,22 @@ namespace DotCMISUnitTest
             cache.Put(mock1, cacheKey1);
 
             ICmisObject o1 = cache.GetById(mock1.Id, cacheKey1);
-            Assert.NotNull(o1);
-            Assert.AreEqual(mock1.Id, o1.Id);
-            Assert.Null(cache.GetById(mock1.Id, cacheKey2));
-            Assert.Null(cache.GetById("- some id -", cacheKey1));
+            Assert.That(o1, Is.Not.Null);
+            Assert.That(o1.Id, Is.EqualTo(mock1.Id));
+            Assert.That(cache.GetById(mock1.Id, cacheKey2), Is.Null);
+            Assert.That(cache.GetById("- some id -", cacheKey1), Is.Null);
 
             // add second object - same id
             MockObject mock2 = new MockObject("1");
             cache.Put(mock2, cacheKey2);
 
             o1 = cache.GetById(mock1.Id, cacheKey1);
-            Assert.NotNull(o1);
-            Assert.AreEqual(mock1.Id, o1.Id);
+            Assert.That(o1, Is.Not.Null);
+            Assert.That(o1.Id, Is.EqualTo(mock1.Id));
 
             ICmisObject o2 = cache.GetById(mock2.Id, cacheKey2);
-            Assert.NotNull(o2);
-            Assert.AreEqual(mock2.Id, o2.Id);
+            Assert.That(o2, Is.Not.Null);
+            Assert.That(o2.Id, Is.EqualTo(mock2.Id));
 
             // add third object - other id
 
@@ -71,16 +71,16 @@ namespace DotCMISUnitTest
             cache.Put(mock3, cacheKey1);
 
             o1 = cache.GetById(mock1.Id, cacheKey1);
-            Assert.NotNull(o1);
-            Assert.AreEqual(mock1.Id, o1.Id);
+            Assert.That(o1, Is.Not.Null);
+            Assert.That(o1.Id, Is.EqualTo(mock1.Id));
 
             o2 = cache.GetById(mock2.Id, cacheKey2);
-            Assert.NotNull(o2);
-            Assert.AreEqual(mock2.Id, o2.Id);
+            Assert.That(o2, Is.Not.Null);
+            Assert.That(o2.Id, Is.EqualTo(mock2.Id));
 
             ICmisObject o3 = cache.GetById(mock3.Id, cacheKey1);
-            Assert.NotNull(o3);
-            Assert.AreEqual(mock3.Id, o3.Id);
+            Assert.That(o3, Is.Not.Null);
+            Assert.That(o3.Id, Is.EqualTo(mock3.Id));
         }
 
         [Test]
@@ -104,20 +104,20 @@ namespace DotCMISUnitTest
             for (int i = 0; i < 10; i++)
             {
                 mocks[i] = new MockObject("m" + i);
-                Assert.NotNull(cache.GetById("m" + i, cacheKey1));
+                Assert.That(cache.GetById("m" + i, cacheKey1), Is.Not.Null);
             }
 
             MockObject newMock = new MockObject("new");
             cache.Put(newMock, cacheKey1);
-            Assert.NotNull(cache.GetById(newMock.Id, cacheKey1));
+            Assert.That(cache.GetById(newMock.Id, cacheKey1), Is.Not.Null);
 
             for (int i = 1; i < 10; i++)
             {
                 mocks[i] = new MockObject("m" + i);
-                Assert.NotNull(cache.GetById("m" + i, cacheKey1));
+                Assert.That(cache.GetById("m" + i, cacheKey1), Is.Not.Null);
             }
 
-            Assert.Null(cache.GetById("m0", cacheKey1));
+            Assert.That(cache.GetById("m0", cacheKey1), Is.Null);
         }
 
         [Test]
@@ -134,11 +134,11 @@ namespace DotCMISUnitTest
             MockObject mock1 = new MockObject("1");
             cache.Put(mock1, cacheKey1);
 
-            Assert.NotNull(cache.GetById(mock1.Id, cacheKey1));
+            Assert.That(cache.GetById(mock1.Id, cacheKey1), Is.Not.Null);
 
             Thread.Sleep(TimeSpan.FromSeconds(1));
 
-            Assert.Null(cache.GetById(mock1.Id, cacheKey1));
+            Assert.That(cache.GetById(mock1.Id, cacheKey1), Is.Null);
         }
 
         [Test]
@@ -156,14 +156,14 @@ namespace DotCMISUnitTest
             cache.PutPath(path, mock1, cacheKey1);
 
             ICmisObject o1 = cache.GetById(mock1.Id, cacheKey1);
-            Assert.NotNull(o1);
-            Assert.AreEqual(mock1.Id, o1.Id);
+            Assert.That(o1, Is.Not.Null);
+            Assert.That(o1.Id, Is.EqualTo(mock1.Id));
 
             ICmisObject o2 = cache.GetByPath(path, cacheKey1);
-            Assert.NotNull(o2);
-            Assert.AreEqual(mock1.Id, o2.Id);
+            Assert.That(o2, Is.Not.Null);
+            Assert.That(o2.Id, Is.EqualTo(mock1.Id));
 
-            Assert.Null(cache.GetByPath("/some/other/path/", cacheKey1));
+            Assert.That(cache.GetByPath("/some/other/path/", cacheKey1), Is.Null);
         }
     }
 

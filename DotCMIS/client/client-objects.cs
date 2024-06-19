@@ -1121,7 +1121,7 @@ namespace DotCMIS.Client.Impl
             PageFetcher<ICmisObject>.FetchPage fetchPageDelegate = delegate(long maxNumItems, long skipCount)
             {
                 // get the children
-                IObjectInFolderList children = service.GetChildren(RepositoryId, objectId, ctxt.FilterString, ctxt.OrderBy, ctxt.IncludeAllowableActions,
+                IObjectInFolderList children = service.GetChildren(RepositoryId, objectId, ctxt.FilterString, ctxt.CustomParameters, ctxt.OrderBy, ctxt.IncludeAllowableActions,
                     ctxt.IncludeRelationships, ctxt.RenditionFilterString, ctxt.IncludePathSegments, maxNumItems, skipCount, null);
 
                 // convert objects
@@ -1298,6 +1298,151 @@ namespace DotCMIS.Client.Impl
         public virtual IPolicy CreatePolicy(IDictionary<string, object> properties)
         {
             return CreatePolicy(properties, null, null, null, Session.DefaultContext);
+        }
+    }
+
+    /// <summary>
+    /// Item implementation
+    /// </summary>
+    public class Item : AbstractCmisObject, IFileableCmisObject
+    {
+
+        public Item(ISession session, IObjectType objectType, IObjectData objectData, IOperationContext context)
+        {
+            Initialize(session, objectType, objectData, context);
+        }
+
+        public void AddToFolder(IObjectId folderId, bool allVersions)
+        {
+            throw new NotImplementedException();
+            if (folderId == null || folderId.Id == null)
+            {
+                throw new ArgumentException("Folder Id must be set!");
+            }
+
+            Binding.GetMultiFilingService().AddObjectToFolder(RepositoryId, ObjectId, folderId.Id, allVersions, null);
+        }
+
+        public virtual IList<string> Paths
+        {
+            get
+            {
+                throw new NotImplementedException();
+                // get object paths of the parent folders
+                IList<IObjectParentData> parents = Binding.GetNavigationService().GetObjectParents(
+                        RepositoryId, ObjectId, GetPropertyQueryName(PropertyIds.Path), false, IncludeRelationshipsFlag.None,
+                        null, true, null);
+
+                IList<string> paths = new List<string>();
+
+                foreach (IObjectParentData p in parents)
+                {
+                    if (p == null || p.Object == null || p.Object.Properties == null)
+                    {
+                        // should not happen...
+                        throw new CmisRuntimeException("Repository sent invalid data!");
+                    }
+
+                    // get path property
+                    IPropertyData pathProperty = p.Object.Properties[PropertyIds.Path];
+                    if (pathProperty == null || pathProperty.PropertyType != PropertyType.String)
+                    {
+                        // the repository sent a folder without a valid path...
+                        throw new CmisRuntimeException("Repository sent invalid data! No path property!");
+                    }
+
+                    if (p.RelativePathSegment == null)
+                    {
+                        // the repository didn't send a relative path segment
+                        throw new CmisRuntimeException("Repository sent invalid data! No relative path segement!");
+                    }
+
+                    string folderPath = pathProperty.FirstValue as string;
+                    paths.Add(folderPath + (folderPath.EndsWith("/") ? "" : "/") + p.RelativePathSegment);
+                }
+
+                return paths;
+            }
+        }
+
+        public IFileableCmisObject Move(IObjectId sourceFolderId, IObjectId targetFolderId)
+        {
+            throw new NotImplementedException();
+            string objectId = ObjectId;
+
+            if (sourceFolderId == null || sourceFolderId.Id == null)
+            {
+                throw new ArgumentException("Source folder id must be set!");
+            }
+
+            if (targetFolderId == null || targetFolderId.Id == null)
+            {
+                throw new ArgumentException("Target folder id must be set!");
+            }
+
+            Binding.GetObjectService().MoveObject(RepositoryId, ref objectId, targetFolderId.Id, sourceFolderId.Id, null);
+
+            if (objectId == null)
+            {
+                return null;
+            }
+
+            IFileableCmisObject movedObject = Session.GetObject(Session.CreateObjectId(objectId)) as IFileableCmisObject;
+            if (movedObject == null)
+            {
+                throw new CmisRuntimeException("Moved object is invalid!");
+            }
+
+            return movedObject;
+        }
+
+        public virtual IList<IFolder> Parents
+        {
+            get
+            {
+                throw new NotImplementedException();
+                // get object ids of the parent folders
+                IList<IObjectParentData> bindingParents = Binding.GetNavigationService().GetObjectParents(RepositoryId, ObjectId,
+                    GetPropertyQueryName(PropertyIds.ObjectId), false, IncludeRelationshipsFlag.None, null, false, null);
+
+                IList<IFolder> parents = new List<IFolder>();
+
+                foreach (IObjectParentData p in bindingParents)
+                {
+                    if (p == null || p.Object == null || p.Object.Properties == null)
+                    {
+                        // should not happen...
+                        throw new CmisRuntimeException("Repository sent invalid data!");
+                    }
+
+                    // get id property
+                    IPropertyData idProperty = p.Object.Properties[PropertyIds.ObjectId];
+                    if (idProperty == null || idProperty.PropertyType != PropertyType.Id)
+                    {
+                        // the repository sent an object without a valid object id...
+                        throw new CmisRuntimeException("Repository sent invalid data! No object id!");
+                    }
+
+                    // fetch the object and make sure it is a folder
+                    IObjectId parentId = Session.CreateObjectId(idProperty.FirstValue as string);
+                    IFolder parentFolder = Session.GetObject(parentId) as IFolder;
+                    if (parentFolder == null)
+                    {
+                        // the repository sent an object that is not a folder...
+                        throw new CmisRuntimeException("Repository sent invalid data! Object is not a folder!");
+                    }
+
+                    parents.Add(parentFolder);
+                }
+
+                return parents;
+            }
+        }
+
+        public void RemoveFromFolder(IObjectId folderId)
+        {
+            throw new NotImplementedException();
+            Binding.GetMultiFilingService().RemoveObjectFromFolder(RepositoryId, ObjectId, folderId == null ? null : folderId.Id, null);
         }
     }
 

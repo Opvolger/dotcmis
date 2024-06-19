@@ -126,6 +126,8 @@ namespace DotCMIS.Client.Impl
                     return new RelationshipType(session, (IRelationshipTypeDefinition)typeDefinition);
                 case BaseTypeId.CmisPolicy:
                     return new PolicyType(session, (IPolicyTypeDefinition)typeDefinition);
+                case BaseTypeId.CmisItem:
+                    return new ItemType(session, (IItemTypeDefinition)typeDefinition);
                 default:
                     throw new CmisRuntimeException("Unknown base type!");
             }
@@ -248,17 +250,21 @@ namespace DotCMIS.Client.Impl
                 IPropertyDefinition definition = type[id];
                 if (definition == null)
                 {
-                    throw new ArgumentException("Property +'" + id + "' is not valid for this type!");
+                    definition = new PropertyStringDefinition()
+                    {
+                        PropertyType = PropertyType.String,
+                        Cardinality = Cardinality.Single
+                    };
                 }
 
                 // check updatability
-                if (updatabilityFilter != null)
-                {
-                    if (!updatabilityFilter.Contains(definition.Updatability))
-                    {
-                        continue;
-                    }
-                }
+                // if (updatabilityFilter != null)
+                // {
+                //    if (!updatabilityFilter.Contains(definition.Updatability))
+                //    {
+                //        continue;
+                //    }
+                //}
 
                 PropertyData propertyData = new PropertyData(definition.PropertyType);
                 propertyData.Id = id;
@@ -334,6 +340,8 @@ namespace DotCMIS.Client.Impl
                     return new Policy(session, type, objectData, context);
                 case BaseTypeId.CmisRelationship:
                     return new Relationship(session, type, objectData, context);
+                case BaseTypeId.CmisItem:
+                    return new Item(session, type, objectData, context);
                 default:
                     throw new CmisRuntimeException("Unsupported type: " + objectData.BaseTypeId.ToString());
             }

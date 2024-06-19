@@ -142,7 +142,7 @@ namespace DotCMIS.Client
         /// <summary>
         /// Creates a new operation context object with the given parameters.
         /// </summary>
-        IOperationContext CreateOperationContext(HashSet<string> filter, bool includeAcls, bool includeAllowableActions, bool includePolicies,
+        IOperationContext CreateOperationContext(HashSet<string> filter, Dictionary<string, string> customParameters, bool includeAcls, bool includeAllowableActions, bool includePolicies,
             IncludeRelationshipsFlag includeRelationships, HashSet<string> renditionFilter, bool includePathSegments, string orderBy,
             bool cacheEnabled, int maxItemsPerPage);
 
@@ -252,6 +252,7 @@ namespace DotCMIS.Client
                 VersioningState? versioningState, IList<IPolicy> policies, IList<IAce> addAces, IList<IAce> removeAces);
         IObjectId CreateDocument(IDictionary<string, object> properties, IObjectId folderId, IContentStream contentStream,
                 VersioningState? versioningState);
+        IObjectId CreateItem(IDictionary<string, object> properties, IObjectId folderId);
         IObjectId CreateDocumentFromSource(IObjectId source, IDictionary<string, object> properties, IObjectId folderId,
                 VersioningState? versioningState, IList<IPolicy> policies, IList<IAce> addAces, IList<IAce> removeAces);
         IObjectId CreateDocumentFromSource(IObjectId source, IDictionary<string, object> properties, IObjectId folderId,
@@ -331,6 +332,8 @@ namespace DotCMIS.Client
         /// This is a set of query names.
         /// </remarks>
         HashSet<string> Filter { get; set; }
+
+        Dictionary<string, string> CustomParameters { get; set; }
 
         /// <summary>
         /// Gets and sets the property filter.
@@ -1098,6 +1101,13 @@ namespace DotCMIS.Client
     /// Policy interface.
     /// </summary>
     public interface IPolicy : IFileableCmisObject, IPolicyProperties
+    {
+    }
+
+    /// <summary>
+    /// Item interface.
+    /// </summary>
+    public interface IItem : IFileableCmisObject, IPolicyProperties
     {
     }
 

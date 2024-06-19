@@ -19,8 +19,8 @@ namespace DotCMISUnitTest
         {
             Dictionary<string, string> parameters = new Dictionary<string, string>();
 
-            string baseUrlAtom = "http://localhost:8080/inmemory/atom";
-            //string baseUrlAtom = "http://cmis.alfresco.com/cmisatom";
+            //string baseUrlAtom = "http://localhost:8080/chemistry-opencmis-server-inmemory-1.1.0/atom";
+            string baseUrlAtom = "http://localhost:8080/alfresco/cmisatom";
            
             string baseUrlWS = "http://localhost:8080/inmemory/services";
 
@@ -45,7 +45,7 @@ namespace DotCMISUnitTest
                 counter++;
             }
 
-            Assert.AreEqual(numOfDocuments, counter);
+            Assert.That(counter, Is.EqualTo(numOfDocuments));
 
             counter = 0;
             foreach (ICmisObject child in folder.GetChildren(oc).GetPage(150))
@@ -54,7 +54,7 @@ namespace DotCMISUnitTest
                 counter++;
             }
 
-            Assert.AreEqual(150, counter);
+            Assert.That(counter, Is.EqualTo(150));
 
             counter = 0;
             foreach (ICmisObject child in folder.GetChildren(oc).SkipTo(20).GetPage(180))
@@ -63,7 +63,7 @@ namespace DotCMISUnitTest
                 counter++;
             }
 
-            Assert.AreEqual(180, counter);
+            Assert.That(counter, Is.EqualTo(180));
 
             folder.DeleteTree(true, null, true);
         }

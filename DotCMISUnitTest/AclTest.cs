@@ -37,10 +37,10 @@ namespace DotCMISUnitTest
 
 
             IAcl acl1 = newFolder.AddAcl(aceList, null);
-            Assert.NotNull(acl1);
+            Assert.That(acl1, Is.Not.Null);
 
             IAcl acl2 = newFolder.RemoveAcl(aceList, null);
-            Assert.NotNull(acl2);
+            Assert.That(acl2, Is.Not.Null);
 
             Session.Delete(newFolderId);
         }

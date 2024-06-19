@@ -38,25 +38,25 @@ namespace DotCMISUnitTest
             // cmis:document
             type = Binding.GetRepositoryService().GetTypeDefinition(RepositoryInfo.Id, "cmis:document", null);
 
-            Assert.NotNull(type);
-            Assert.AreEqual(BaseTypeId.CmisDocument, type.BaseTypeId);
-            Assert.AreEqual("cmis:document", type.Id);
+            Assert.That(type, Is.Not.Null);
+            Assert.That(type.BaseTypeId, Is.EqualTo(BaseTypeId.CmisDocument));
+            Assert.That(type.Id, Is.EqualTo("cmis:document"));
 
             // cmis:folder
             type = Binding.GetRepositoryService().GetTypeDefinition(RepositoryInfo.Id, "cmis:folder", null);
 
-            Assert.NotNull(type);
-            Assert.AreEqual(BaseTypeId.CmisFolder, type.BaseTypeId);
-            Assert.AreEqual("cmis:folder", type.Id);
+            Assert.That(type, Is.Not.Null);
+            Assert.That(type.BaseTypeId, Is.EqualTo(BaseTypeId.CmisFolder));
+            Assert.That(type.Id, Is.EqualTo("cmis:folder"));
 
             // cmis:relationship
             try
             {
                 type = Binding.GetRepositoryService().GetTypeDefinition(RepositoryInfo.Id, "cmis:relationship", null);
 
-                Assert.NotNull(type);
-                Assert.AreEqual(BaseTypeId.CmisRelationship, type.BaseTypeId);
-                Assert.AreEqual("cmis:relationship", type.Id);
+                Assert.That(type, Is.Not.Null);
+                Assert.That(type.BaseTypeId, Is.EqualTo(BaseTypeId.CmisRelationship));
+                Assert.That(type.Id, Is.EqualTo("cmis:relationship"));
             }
             catch (CmisObjectNotFoundException)
             {
@@ -68,9 +68,9 @@ namespace DotCMISUnitTest
             {
                 type = Binding.GetRepositoryService().GetTypeDefinition(RepositoryInfo.Id, "cmis:policy", null);
 
-                Assert.NotNull(type);
-                Assert.AreEqual(BaseTypeId.CmisPolicy, type.BaseTypeId);
-                Assert.AreEqual("cmis:policy", type.Id);
+                Assert.That(type, Is.Not.Null);
+                Assert.That(type.BaseTypeId, Is.EqualTo(BaseTypeId.CmisPolicy));
+                Assert.That(type.Id, Is.EqualTo("cmis:policy"));
             }
             catch (CmisObjectNotFoundException)
             {
@@ -83,18 +83,18 @@ namespace DotCMISUnitTest
         {
             ITypeDefinitionList typeList = Binding.GetRepositoryService().GetTypeChildren(RepositoryInfo.Id, null, null, null, null, null);
 
-            Assert.NotNull(typeList);
-            Assert.NotNull(typeList.List);
-            Assert.NotNull(typeList.NumItems);
-            Assert.True(typeList.NumItems >= 2);
-            Assert.True(typeList.NumItems <= 4);
+            Assert.That(typeList, Is.Not.Null);
+            Assert.That(typeList.List, Is.Not.Null);
+            Assert.That(typeList.NumItems, Is.Not.Null);
+            Assert.That(typeList.NumItems >= 2, Is.True);
+            Assert.That(typeList.NumItems <= 5, Is.True);
 
             bool foundDocument = false;
             bool foundFolder = false;
             foreach (ITypeDefinition type in typeList.List)
             {
-                Assert.NotNull(type);
-                Assert.NotNull(type.Id);
+                Assert.That(type, Is.Not.Null);
+                Assert.That(type.Id, Is.Not.Null);
 
                 if (type.Id == "cmis:document")
                 {
@@ -106,8 +106,8 @@ namespace DotCMISUnitTest
                 }
             }
 
-            Assert.True(foundDocument);
-            Assert.True(foundFolder);
+            Assert.That(foundDocument, Is.True);
+            Assert.That(foundFolder, Is.True);
         }
     }
 }
