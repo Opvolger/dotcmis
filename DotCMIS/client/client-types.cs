@@ -126,6 +126,30 @@ namespace DotCMIS.Client.Impl
     }
 
     /// <summary>
+    /// Item type implementation.
+    /// </summary>
+    public class ItemType : FolderTypeDefinition, IFolderType
+    {
+        private ObjectTypeHelper helper;
+
+        public ItemType(ISession session, IItemTypeDefinition typeDefinition)
+        {
+            Initialize(typeDefinition);
+            helper = new ObjectTypeHelper(session, this);
+        }
+
+        public IObjectType GetBaseType() { return helper.GetBaseType(); }
+
+        public IItemEnumerable<IObjectType> GetChildren() { return helper.GetChildren(); }
+
+        public IList<ITree<IObjectType>> GetDescendants(int depth) { return helper.GetDescendants(depth); }
+
+        public IObjectType GetParentType() { return helper.GetParentType(); }
+
+        public bool IsBaseType { get { return helper.IsBaseType; } }
+    }
+
+    /// <summary>
     /// Relationship type implementation.
     /// </summary>
     public class RelationshipType : RelationshipTypeDefinition, IRelationshipType

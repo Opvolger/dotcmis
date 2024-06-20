@@ -183,7 +183,7 @@ namespace DotCMIS.Client.Impl
             CreateAndCheckoutUpdatability.Add(Updatability.WhenCheckedOut);
         }
 
-        protected static IOperationContext FallbackContext = new OperationContext(null, false, true, false, IncludeRelationshipsFlag.None, null, true, null, true, 100);
+        protected static IOperationContext FallbackContext = new OperationContext(null, null, false, true, false, IncludeRelationshipsFlag.None, null, true, null, true, 100);
 
         protected IDictionary<string, string> parameters;
         private object sessionLock = new object();
@@ -336,11 +336,11 @@ namespace DotCMIS.Client.Impl
             return new OperationContext();
         }
 
-        public IOperationContext CreateOperationContext(HashSet<string> filter, bool includeAcls, bool includeAllowableActions, bool includePolicies,
+        public IOperationContext CreateOperationContext(HashSet<string> filter, Dictionary<string, string> customParameters, bool includeAcls, bool includeAllowableActions, bool includePolicies,
             IncludeRelationshipsFlag includeRelationships, HashSet<string> renditionFilter, bool includePathSegments, string orderBy,
             bool cacheEnabled, int maxItemsPerPage)
         {
-            return new OperationContext(filter, includeAcls, includeAllowableActions, includePolicies, includeRelationships, renditionFilter,
+            return new OperationContext(filter, customParameters, includeAcls, includeAllowableActions, includePolicies, includeRelationships, renditionFilter,
                 includePathSegments, orderBy, cacheEnabled, maxItemsPerPage);
         }
 
@@ -784,6 +784,24 @@ namespace DotCMIS.Client.Impl
             return CreateDocument(properties, folderId, contentStream, versioningState, null, null, null);
         }
 
+        public IObjectId CreateItem(IDictionary<string, object> properties, IObjectId folderId)
+        {
+            if (properties == null || properties.Count == 0)
+            {
+                throw new ArgumentException("Properties must not be empty!");
+            }
+
+            var newId = Binding.GetObjectService().CreateItem(
+                RepositoryId,
+                ObjectFactory.ConvertProperties(
+                    properties, null, null
+                ),
+                folderId.Id
+            );
+
+            return newId == null ? null : CreateObjectId(newId);
+        }
+
         public IObjectId CreateDocumentFromSource(IObjectId source, IDictionary<string, object> properties, IObjectId folderId,
             VersioningState? versioningState, IList<IPolicy> policies, IList<IAce> addAces, IList<IAce> removeAces)
         {
@@ -886,6 +904,29 @@ namespace DotCMIS.Client.Impl
         public IObjectId CreateRelationship(IDictionary<string, object> properties)
         {
             return CreateRelationship(properties, null, null, null);
+        }
+
+        public IEnumerable<IObjectId> BulkUpdate(IDictionary<string, object> properties, IList<IPolicy> policies, IList<IAce> addAces,
+    IList<IAce> removeAces)
+        {
+            if (properties == null || properties.Count == 0)
+            {
+                throw new ArgumentException("Properties must not be empty!");
+            }
+
+            var newIds = Binding.GetObjectService().BulkUpdate(RepositoryId, ObjectFactory.ConvertProperties(properties, null, CreateUpdatability),
+                ObjectFactory.ConvertPolicies(policies), ObjectFactory.ConvertAces(addAces), ObjectFactory.ConvertAces(removeAces), null);
+
+            var idList = new List<IObjectId>();
+            foreach (var newId in newIds)
+            {
+                idList.Add(CreateObjectId(newId));
+            }
+            return idList;
+        }
+        public IEnumerable<IObjectId> BulkUpdate(IDictionary<string, object> properties)
+        {
+            return BulkUpdate(properties, null, null, null);
         }
 
         public IItemEnumerable<IRelationship> GetRelationships(IObjectId objectId, bool includeSubRelationshipTypes,

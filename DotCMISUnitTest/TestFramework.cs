@@ -46,7 +46,7 @@ namespace DotCMISUnitTest
                 if (repositoryInfo == null)
                 {
                     repositoryInfo = Binding.GetRepositoryService().GetRepositoryInfos(null)[0];
-                    Assert.NotNull(repositoryInfo);
+                    Assert.That(repositoryInfo, Is.Not.Null);
                 }
 
                 return repositoryInfo;
@@ -70,20 +70,15 @@ namespace DotCMISUnitTest
 
         public ISession ConnectFromConfig()
         {
-            Dictionary<string, string> parameters = new Dictionary<string, string>();
+            Dictionary<string, string> parameters = AppSettingsHelper.GetDictionaryAppSettings();
 
-            foreach (string key in ConfigurationManager.AppSettings.AllKeys)
-            {
-                parameters[key] = ConfigurationManager.AppSettings.Get(key);
-            }
-
-            string documentType = ConfigurationManager.AppSettings.Get("test.documenttype");
+            string documentType = AppSettingsHelper.GetAppSetting("test.documenttype");
             if (documentType != null)
             {
                 DefaultDocumentType = documentType;
             }
 
-            string folderType = ConfigurationManager.AppSettings.Get("test.foldertype");
+            string folderType = AppSettingsHelper.GetAppSetting("test.foldertype");
             if (folderType != null)
             {
                 DefaultFolderType = folderType;
@@ -101,12 +96,12 @@ namespace DotCMISUnitTest
                 session = factory.GetRepositories(parameters)[0].CreateSession();
             }
 
-            Assert.NotNull(session);
-            Assert.NotNull(session.Binding);
-            Assert.NotNull(session.RepositoryInfo);
-            Assert.NotNull(session.RepositoryInfo.Id);
+            Assert.That(session, Is.Not.Null);
+            Assert.That(session.Binding, Is.Not.Null);
+            Assert.That(session.RepositoryInfo, Is.Not.Null);
+            Assert.That(session.RepositoryInfo.Id, Is.Not.Null);
 
-            string testRootFolderPath = ConfigurationManager.AppSettings.Get("test.rootfolder");
+            string testRootFolderPath = AppSettingsHelper.GetAppSetting("test.rootfolder");
             if (testRootFolderPath == null)
             {
                 TestFolder = session.GetRootFolder();
@@ -116,8 +111,8 @@ namespace DotCMISUnitTest
                 TestFolder = session.GetObjectByPath(testRootFolderPath) as IFolder;
             }
 
-            Assert.NotNull(TestFolder);
-            Assert.NotNull(TestFolder.Id);
+            Assert.That(TestFolder, Is.Not.Null);
+            Assert.That(TestFolder.Id, Is.Not.Null);
 
             return session;
         }
@@ -126,20 +121,18 @@ namespace DotCMISUnitTest
         {
             Dictionary<string, string> parameters = new Dictionary<string, string>();
 
-            string baseUrlAtom = "http://localhost:8080/alfresco/cmisatom";
-
             parameters[SessionParameter.BindingType] = BindingType.AtomPub;
-            parameters[SessionParameter.AtomPubUrl] = baseUrlAtom;
-            parameters[SessionParameter.User] = "admin";
-            parameters[SessionParameter.Password] = "admin";
+            parameters[SessionParameter.AtomPubUrl] = AppSettingsHelper.GetAppSetting(SessionParameter.AtomPubUrl);
+            parameters[SessionParameter.User] = AppSettingsHelper.GetAppSetting(SessionParameter.User);
+            parameters[SessionParameter.Password] = AppSettingsHelper.GetAppSetting(SessionParameter.Password);
 
             SessionFactory factory = SessionFactory.NewInstance();
             ISession session = factory.GetRepositories(parameters)[0].CreateSession();
 
-            Assert.NotNull(session);
-            Assert.NotNull(session.Binding);
-            Assert.NotNull(session.RepositoryInfo);
-            Assert.NotNull(session.RepositoryInfo.Id);
+            Assert.That(session, Is.Not.Null);
+            Assert.That(session.Binding, Is.Not.Null);
+            Assert.That(session.RepositoryInfo, Is.Not.Null);
+            Assert.That(session.RepositoryInfo.Id, Is.Not.Null);
 
             return session;
         }
@@ -166,10 +159,10 @@ namespace DotCMISUnitTest
             SessionFactory factory = SessionFactory.NewInstance();
             ISession session = factory.GetRepositories(parameters)[0].CreateSession();
 
-            Assert.NotNull(session);
-            Assert.NotNull(session.Binding);
-            Assert.NotNull(session.RepositoryInfo);
-            Assert.NotNull(session.RepositoryInfo.Id);
+            Assert.That(session, Is.Not.Null);
+            Assert.That(session.Binding, Is.Not.Null);
+            Assert.That(session.RepositoryInfo, Is.Not.Null);
+            Assert.That(session.RepositoryInfo.Id, Is.Not.Null);
 
             return session;
         }
@@ -178,10 +171,10 @@ namespace DotCMISUnitTest
         {
             IObjectData result = Binding.GetObjectService().GetObject(RepositoryInfo.Id, objectId, "*", true, IncludeRelationshipsFlag.Both, "*", true, true, null);
 
-            Assert.NotNull(result);
-            Assert.NotNull(result.Id);
-            Assert.NotNull(result.BaseTypeId);
-            Assert.NotNull(result.Properties);
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Id, Is.Not.Null);
+            Assert.That(result.BaseTypeId, Is.Not.Null);
+            Assert.That(result.Properties, Is.Not.Null);
 
             return result;
         }
@@ -216,20 +209,20 @@ namespace DotCMISUnitTest
 
             string newDocId = Binding.GetObjectService().CreateDocument(RepositoryInfo.Id, properties, folderId, contentStream, null, null, null, null, null);
 
-            Assert.NotNull(newDocId);
+            Assert.That(newDocId, Is.Not.Null);
 
             IObjectData doc = GetFullObject(newDocId);
 
-            Assert.NotNull(doc);
-            Assert.NotNull(doc.Id);
-            Assert.AreEqual(BaseTypeId.CmisDocument, doc.BaseTypeId);
-            Assert.NotNull(doc.Properties);
-            Assert.NotNull(doc.Properties[PropertyIds.ObjectTypeId]);
-            Assert.AreEqual(PropertyType.Id, doc.Properties[PropertyIds.ObjectTypeId].PropertyType);
-            Assert.AreEqual(DefaultDocumentType, doc.Properties[PropertyIds.ObjectTypeId].FirstValue as string);
-            Assert.NotNull(doc.Properties[PropertyIds.Name]);
-            Assert.AreEqual(PropertyType.String, doc.Properties[PropertyIds.Name].PropertyType);
-            Assert.AreEqual(name, doc.Properties[PropertyIds.Name].FirstValue as string);
+            Assert.That(doc, Is.Not.Null);
+            Assert.That(doc.Id, Is.Not.Null);
+            Assert.That(doc.BaseTypeId, Is.EqualTo(BaseTypeId.CmisDocument));
+            Assert.That(doc.Properties, Is.Not.Null);
+            Assert.That(doc.Properties[PropertyIds.ObjectTypeId], Is.Not.Null);
+            Assert.That(doc.Properties[PropertyIds.ObjectTypeId].PropertyType, Is.EqualTo(PropertyType.Id));
+            Assert.That(doc.Properties[PropertyIds.ObjectTypeId].FirstValue as string, Is.EqualTo(DefaultDocumentType));
+            Assert.That(doc.Properties[PropertyIds.Name], Is.Not.Null);
+            Assert.That(doc.Properties[PropertyIds.Name].PropertyType, Is.EqualTo(PropertyType.String));
+            Assert.That(doc.Properties[PropertyIds.Name].FirstValue as string, Is.EqualTo(name));
 
             if (folderId != null)
             {
@@ -257,20 +250,20 @@ namespace DotCMISUnitTest
 
             string newFolderId = Binding.GetObjectService().CreateFolder(RepositoryInfo.Id, properties, folderId, null, null, null, null);
 
-            Assert.NotNull(newFolderId);
+            Assert.That(newFolderId, Is.Not.Null);
 
             IObjectData folder = GetFullObject(newFolderId);
 
-            Assert.NotNull(folder);
-            Assert.NotNull(folder.Id);
-            Assert.AreEqual(BaseTypeId.CmisFolder, folder.BaseTypeId);
-            Assert.NotNull(folder.Properties);
-            Assert.NotNull(folder.Properties[PropertyIds.ObjectTypeId]);
-            Assert.AreEqual(PropertyType.Id, folder.Properties[PropertyIds.ObjectTypeId].PropertyType);
-            Assert.AreEqual(DefaultFolderType, folder.Properties[PropertyIds.ObjectTypeId].FirstValue as string);
-            Assert.NotNull(folder.Properties[PropertyIds.Name]);
-            Assert.AreEqual(PropertyType.String, folder.Properties[PropertyIds.Name].PropertyType);
-            Assert.AreEqual(name, folder.Properties[PropertyIds.Name].FirstValue as string);
+            Assert.That(folder, Is.Not.Null);
+            Assert.That(folder.Id, Is.Not.Null);
+            Assert.That(folder.BaseTypeId, Is.EqualTo(BaseTypeId.CmisFolder));
+            Assert.That(folder.Properties, Is.Not.Null);
+            Assert.That(folder.Properties[PropertyIds.ObjectTypeId], Is.Not.Null);
+            Assert.That(folder.Properties[PropertyIds.ObjectTypeId].PropertyType, Is.EqualTo(PropertyType.Id));
+            Assert.That(folder.Properties[PropertyIds.ObjectTypeId].FirstValue as string, Is.EqualTo(DefaultFolderType));
+            Assert.That(folder.Properties[PropertyIds.Name], Is.Not.Null);
+            Assert.That(folder.Properties[PropertyIds.Name].PropertyType, Is.EqualTo(PropertyType.String));
+            Assert.That(folder.Properties[PropertyIds.Name].FirstValue as string, Is.EqualTo(name));
 
             if (folderId != null)
             {
@@ -285,21 +278,21 @@ namespace DotCMISUnitTest
             // check parents
             IList<IObjectParentData> parents = Binding.GetNavigationService().GetObjectParents(RepositoryInfo.Id, objectId, null, null, null, null, null, null);
 
-            Assert.NotNull(parents);
-            Assert.True(parents.Count > 0);
+            Assert.That(parents, Is.Not.Null);
+            Assert.That(parents.Count > 0, Is.True);
 
             bool found = false;
             foreach (IObjectParentData parent in parents)
             {
-                Assert.NotNull(parent);
-                Assert.NotNull(parent.Object);
-                Assert.NotNull(parent.Object.Id);
+                Assert.That(parent, Is.Not.Null);
+                Assert.That(parent.Object, Is.Not.Null);
+                Assert.That(parent.Object.Id, Is.Not.Null);
                 if (parent.Object.Id == folderId)
                 {
                     found = true;
                 }
             }
-            Assert.True(found);
+            Assert.That(found, Is.True);
 
             // check children
             found = false;
@@ -309,19 +302,19 @@ namespace DotCMISUnitTest
 
             while (hasMore)
             {
-                IObjectInFolderList children = Binding.GetNavigationService().GetChildren(RepositoryInfo.Id, folderId, null, null, null, null, null, null, maxItems, skipCount, null);
+                IObjectInFolderList children = Binding.GetNavigationService().GetChildren(RepositoryInfo.Id, folderId, null, null, null, null, null, null, null, maxItems, skipCount, null);
 
-                Assert.NotNull(children);
+                Assert.That(children, Is.Not.Null);
                 if (children.NumItems != null)
                 {
-                    Assert.True(children.NumItems > 0);
+                    Assert.That(children.NumItems > 0, Is.True);
                 }
 
                 foreach (ObjectInFolderData obj in children.Objects)
                 {
-                    Assert.NotNull(obj);
-                    Assert.NotNull(obj.Object);
-                    Assert.NotNull(obj.Object.Id);
+                    Assert.That(obj, Is.Not.Null);
+                    Assert.That(obj.Object, Is.Not.Null);
+                    Assert.That(obj.Object.Id, Is.Not.Null);
                     if (obj.Object.Id == objectId)
                     {
                         found = true;
@@ -340,7 +333,7 @@ namespace DotCMISUnitTest
                 }
             }
 
-            Assert.True(found);
+            Assert.That(found, Is.True);
 
             // check descendants
             if (RepositoryInfo.Capabilities == null ||
@@ -353,20 +346,20 @@ namespace DotCMISUnitTest
             found = false;
             IList<IObjectInFolderContainer> descendants = Binding.GetNavigationService().GetDescendants(RepositoryInfo.Id, folderId, 1, null, null, null, null, null, null);
 
-            Assert.NotNull(descendants);
+            Assert.That(descendants, Is.Not.Null);
 
             foreach (IObjectInFolderContainer obj in descendants)
             {
-                Assert.NotNull(obj);
-                Assert.NotNull(obj.Object);
-                Assert.NotNull(obj.Object.Object);
-                Assert.NotNull(obj.Object.Object.Id);
+                Assert.That(obj, Is.Not.Null);
+                Assert.That(obj.Object, Is.Not.Null);
+                Assert.That(obj.Object.Object, Is.Not.Null);
+                Assert.That(obj.Object.Object.Id, Is.Not.Null);
                 if (obj.Object.Object.Id == objectId)
                 {
                     found = true;
                 }
             }
-            Assert.True(found);
+            Assert.That(found, Is.True);
         }
 
         public void DeleteObject(string objectId)
@@ -387,8 +380,8 @@ namespace DotCMISUnitTest
         {
             IContentStream contentStream = Binding.GetObjectService().GetContentStream(RepositoryInfo.Id, objectId, null, null, null, null);
 
-            Assert.NotNull(contentStream);
-            Assert.NotNull(contentStream.Stream);
+            Assert.That(contentStream, Is.Not.Null);
+            Assert.That(contentStream.Stream, Is.Not.Null);
 
             MemoryStream memStream = new MemoryStream();
             byte[] buffer = new byte[4096];
@@ -412,25 +405,25 @@ namespace DotCMISUnitTest
                 return;
             }
 
-            Assert.NotNull(expected);
-            Assert.NotNull(actual);
+            Assert.That(expected, Is.Not.Null);
+            Assert.That(actual, Is.Not.Null);
 
-            Assert.NotNull(actual.Id);
+            Assert.That(actual.Id, Is.Not.Null);
 
-            Assert.AreEqual(expected.Id, actual.Id);
-            Assert.AreEqual(expected.IsBaseType, actual.IsBaseType);
-            Assert.AreEqual(expected.BaseTypeId, actual.BaseTypeId);
-            Assert.AreEqual(expected.DisplayName, actual.DisplayName);
-            Assert.AreEqual(expected.Description, actual.Description);
-            Assert.AreEqual(expected.LocalName, actual.LocalName);
-            Assert.AreEqual(expected.LocalNamespace, actual.LocalNamespace);
-            Assert.AreEqual(expected.QueryName, actual.QueryName);
-            Assert.AreEqual(expected.PropertyDefinitions.Count, actual.PropertyDefinitions.Count);
+            Assert.That(actual.Id, Is.EqualTo(expected.Id));
+            Assert.That(actual.IsBaseType, Is.EqualTo(expected.IsBaseType));
+            Assert.That(actual.BaseTypeId, Is.EqualTo(expected.BaseTypeId));
+            Assert.That(actual.DisplayName, Is.EqualTo(expected.DisplayName));
+            Assert.That(actual.Description, Is.EqualTo(expected.Description));
+            Assert.That(actual.LocalName, Is.EqualTo(expected.LocalName));
+            Assert.That(actual.LocalNamespace, Is.EqualTo(expected.LocalNamespace));
+            Assert.That(actual.QueryName, Is.EqualTo(expected.QueryName));
+            Assert.That(actual.PropertyDefinitions.Count, Is.EqualTo(expected.PropertyDefinitions.Count));
 
             foreach (IPropertyDefinition propDef in expected.PropertyDefinitions)
             {
-                Assert.NotNull(propDef);
-                Assert.NotNull(propDef.Id);
+                Assert.That(propDef, Is.Not.Null);
+                Assert.That(propDef.Id, Is.Not.Null);
 
                 IPropertyDefinition propDef2 = actual[propDef.Id];
 
@@ -445,20 +438,20 @@ namespace DotCMISUnitTest
                 return;
             }
 
-            Assert.NotNull(expected);
-            Assert.NotNull(actual);
+            Assert.That(expected, Is.Not.Null);
+            Assert.That(actual, Is.Not.Null);
 
-            Assert.NotNull(actual.Id);
+            Assert.That(actual.Id, Is.Not.Null);
 
-            Assert.AreEqual(expected.Id, actual.Id);
-            Assert.AreEqual(expected.LocalName, actual.LocalName);
-            Assert.AreEqual(expected.LocalNamespace, actual.LocalNamespace);
-            Assert.AreEqual(expected.DisplayName, actual.DisplayName);
-            Assert.AreEqual(expected.Description, actual.Description);
-            Assert.AreEqual(expected.QueryName, actual.QueryName);
-            Assert.AreEqual(expected.PropertyType, actual.PropertyType);
-            Assert.AreEqual(expected.Cardinality, actual.Cardinality);
-            Assert.AreEqual(expected.Updatability, actual.Updatability);
+            Assert.That(actual.Id, Is.EqualTo(expected.Id));
+            Assert.That(actual.LocalName, Is.EqualTo(expected.LocalName));
+            Assert.That(actual.LocalNamespace, Is.EqualTo(expected.LocalNamespace));
+            Assert.That(actual.DisplayName, Is.EqualTo(expected.DisplayName));
+            Assert.That(actual.Description, Is.EqualTo(expected.Description));
+            Assert.That(actual.QueryName, Is.EqualTo(expected.QueryName));
+            Assert.That(actual.PropertyType, Is.EqualTo(expected.PropertyType));
+            Assert.That(actual.Cardinality, Is.EqualTo(expected.Cardinality));
+            Assert.That(actual.Updatability, Is.EqualTo(expected.Updatability));
         }
     }
 }

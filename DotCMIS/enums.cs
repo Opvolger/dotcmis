@@ -36,7 +36,10 @@ namespace DotCMIS.Enums
         CmisRelationship,
 
         [CmisValue("cmis:policy")]
-        CmisPolicy
+        CmisPolicy,
+
+        [CmisValue("cmis:item")]
+        CmisItem
     }
 
     public enum CapabilityContentStreamUpdates

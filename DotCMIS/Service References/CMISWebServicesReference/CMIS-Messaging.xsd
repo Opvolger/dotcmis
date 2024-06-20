@@ -631,6 +631,42 @@
       </xs:sequence>
     </xs:complexType>
   </xs:element>
+  <xs:element name="bulkUpdate">
+  <xs:complexType>
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="repositoryId" type="xs:string" />
+      <xs:element minOccurs="1" maxOccurs="1" name="properties" type="cmis:cmisPropertiesType" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="policies" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="addACEs" nillable="true" type="cmis:cmisAccessControlListType" />
+      <xs:element minOccurs="0" maxOccurs="1" name="removeACEs" nillable="true" type="cmis:cmisAccessControlListType" />
+      <xs:element minOccurs="0" maxOccurs="1" name="extension" nillable="true" type="cmism:cmisExtensionType">
+        <xs:annotation>
+            <xs:documentation>
+							This is an extension element to hold any
+							repository or
+							vendor-specific extensions
+						</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  </xs:element>
+  <xs:element name="bulkUpdateResponse">
+  <xs:complexType>
+	<xs:sequence>
+	  <xs:element minOccurs="1" maxOccurs="unbounded" name="objectId" type="xs:string" />
+	  <xs:element minOccurs="0" maxOccurs="1" name="extension" nillable="true" type="cmism:cmisExtensionType">
+		<xs:annotation>
+            <xs:documentation>
+							This is an extension element to hold any
+							repository or
+							vendor-specific extensions
+						</xs:documentation>
+		</xs:annotation>
+	  </xs:element>
+	</xs:sequence>
+  </xs:complexType>
+  </xs:element>
   <xs:element name="getAllowableActions">
     <xs:complexType>
       <xs:sequence>

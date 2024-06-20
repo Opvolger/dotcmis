@@ -199,6 +199,11 @@ namespace DotCMIS.Data.Impl
     {
     }
 
+    // https://ecmpartner.onespresso.net/setup/dotcmis.html
+    public class ItemTypeDefinitionType : AbstractTypeDefinition, IItemTypeDefinition
+    {
+    }
+
     public class PolicyTypeDefinition : AbstractTypeDefinition, IPolicyTypeDefinition
     {
     }

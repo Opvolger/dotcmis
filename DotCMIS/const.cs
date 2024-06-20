@@ -24,6 +24,7 @@ namespace DotCMIS
         // ---- general parameter ----
         public const string User = "org.apache.chemistry.dotcmis.user";
         public const string Password = "org.apache.chemistry.dotcmis.password";
+        public const string BearerToken = "org.apache.chemistry.dotcmis.bearertoken";
 
         // ---- provider parameter ----
         // Predefined binding types
@@ -245,6 +246,7 @@ namespace DotCMIS
         public const string TemplateObjectByPath = "objectbypath";
         public const string TemplateTypeById = "typebyid";
         public const string TemplateQuery = "query";
+        public const string TemplateBulkUpdate = "bulkupdate";
 
         // Link rel
         public const string RelSelf = "self";

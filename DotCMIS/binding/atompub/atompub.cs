@@ -1105,7 +1105,7 @@ namespace DotCMIS.Binding.AtomPub
             Session = session;
         }
 
-        public IObjectInFolderList GetChildren(string repositoryId, string folderId, string filter, string orderBy,
+        public IObjectInFolderList GetChildren(string repositoryId, string folderId, string filter, Dictionary<string, string> customParameters, string orderBy,
             bool? includeAllowableActions, IncludeRelationshipsFlag? includeRelationships, string renditionFilter,
             bool? includePathSegment, long? maxItems, long? skipCount, IExtensionsData extension)
         {
@@ -1126,8 +1126,19 @@ namespace DotCMIS.Binding.AtomPub
             url.AddParameter(AtomPubConstants.ParamRelationships, includeRelationships);
             url.AddParameter(AtomPubConstants.ParamRenditionFilter, renditionFilter);
             url.AddParameter(AtomPubConstants.ParamPathSegment, includePathSegment);
-            url.AddParameter(AtomPubConstants.ParamMaxItems, maxItems);
-            url.AddParameter(AtomPubConstants.ParamSkipCount, skipCount);
+            // T1 Added: Loop through the custom parameters
+            if (customParameters != null)
+            {
+                foreach (var param in customParameters)
+                {
+                    url.AddParameter(param.Key, param.Value);
+                }
+            }
+            else
+            {
+                url.AddParameter(AtomPubConstants.ParamMaxItems, maxItems);
+                url.AddParameter(AtomPubConstants.ParamSkipCount, skipCount);
+            }
 
             // read and parse
             HttpUtils.Response resp = Read(url);
@@ -1637,6 +1648,56 @@ namespace DotCMIS.Binding.AtomPub
             return entry.Id;
         }
 
+        // https://ecmpartner.onespresso.net/setup/dotcmis.html
+        public string CreateItem(string repositoryId, IProperties properties, string folderId)
+        {
+            CheckCreateProperties(properties);
+
+            // find the link
+            string link = null;
+
+            if (folderId == null)
+            {
+                link = LoadCollection(repositoryId, AtomPubConstants.CollectionUnfiled);
+
+                if (link == null)
+                {
+                    throw new CmisObjectNotFoundException("Unknown respository or unfiling not supported!");
+                }
+            }
+            else
+            {
+                link = LoadLink(repositoryId, folderId, AtomPubConstants.RelDown, AtomPubConstants.MediatypeChildren);
+
+                if (link == null)
+                {
+                    ThrowLinkException(repositoryId, folderId, AtomPubConstants.RelDown, AtomPubConstants.MediatypeChildren);
+                }
+            }
+
+            UrlBuilder url = new UrlBuilder(link);
+
+            // set up object and writer
+            cmisObjectType cmisObject = CreateObject(properties, null, null);//policies);
+
+            string mediaType = null;
+            Stream stream = null;
+            string filename = null;
+
+            var entryWriter = new AtomEntryWriter(cmisObject, mediaType, filename, stream);
+
+            // post the new folder object
+            var resp = Post(url, AtomPubConstants.MediatypeEntry, entryWriter.Write);
+
+            // parse the response
+            var entry = Parse<AtomEntry>(resp.Stream);
+
+            // handle ACL modifications
+            //HandleAclModifications(repositoryId, entry, addAces, removeAces);
+
+            return entry.Id;
+        }
+
         public string CreateDocumentFromSource(string repositoryId, string sourceId, IProperties properties, string folderId,
             VersioningState? versioningState, IList<string> policies, IAcl addAces, IAcl removeAces, IExtensionsData extension)
         {
@@ -1766,6 +1827,40 @@ namespace DotCMIS.Binding.AtomPub
             HandleAclModifications(repositoryId, entry, addAces, removeAces);
 
             return entry.Id;
+        }
+
+        public IEnumerable<string> BulkUpdate(string repositoryId, IProperties properties, IList<string> policies, IAcl addAces, IAcl removeAces,
+    IExtensionsData extension)
+        {
+            // CheckCreateProperties(properties);
+
+            // find the link
+            var link = LoadTemplateLink(repositoryId, AtomPubConstants.TemplateBulkUpdate, null);
+            if (link == null)
+            {
+                ThrowLinkException(repositoryId, "ROOTFOLDER", AtomPubConstants.RelDown, AtomPubConstants.MediatypeChildren);
+            }
+
+            var url = new UrlBuilder(link);
+
+            // set up object and writer
+            cmisObjectType cmisObject = CreateObject(properties, null, policies);
+
+            AtomEntryWriter entryWriter = new AtomEntryWriter(cmisObject);
+
+            // post the new folder object
+            HttpUtils.Response resp = Post(url, AtomPubConstants.MediatypeEntry, new HttpUtils.Output(entryWriter.Write));
+
+            // parse the response
+            var entries = Parse<AtomFeed>(resp.Stream);
+            var ids = new List<string>();
+            foreach (var entry in entries.GetEntries())
+            {
+                // handle ACL modifications
+                HandleAclModifications(repositoryId, entry, addAces, removeAces);
+                ids.Add(entry.Id);
+            }
+            return ids;
         }
 
         public IAllowableActions GetAllowableActions(string repositoryId, string objectId, IExtensionsData extension)

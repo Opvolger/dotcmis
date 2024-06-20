@@ -33,6 +33,7 @@ namespace DotCMIS.Client.Impl
         public const string RenditionNone = "cmis:none";
 
         private HashSet<string> filter;
+        private Dictionary<string, string> customParameters;
         private bool includeAllowableActions;
         private bool includeAcls;
         private IncludeRelationshipsFlag? includeRelationships;
@@ -47,6 +48,7 @@ namespace DotCMIS.Client.Impl
         public OperationContext()
         {
             filter = null;
+            customParameters = null;
             includeAcls = false;
             includeAllowableActions = true;
             includePolicies = false;
@@ -63,6 +65,7 @@ namespace DotCMIS.Client.Impl
         public OperationContext(IOperationContext source)
         {
             filter = (source.Filter == null ? null : new HashSet<string>(source.Filter));
+            customParameters = source.CustomParameters;
             includeAcls = source.IncludeAcls;
             includeAllowableActions = source.IncludeAllowableActions;
             includePolicies = source.IncludePolicies;
@@ -76,11 +79,12 @@ namespace DotCMIS.Client.Impl
             GenerateCacheKey();
         }
 
-        public OperationContext(HashSet<string> filter, bool includeAcls, bool includeAllowableActions,
+        public OperationContext(HashSet<string> filter, Dictionary<string, string> customParameters, bool includeAcls, bool includeAllowableActions,
             bool includePolicies, IncludeRelationshipsFlag includeRelationships, HashSet<string> renditionFilter,
             bool includePathSegments, String orderBy, bool cacheEnabled, int maxItemsPerPage)
         {
             this.filter = filter;
+            this.customParameters = customParameters;
             this.includeAcls = includeAcls;
             this.includeAllowableActions = includeAllowableActions;
             this.includePolicies = includePolicies;
@@ -133,6 +137,8 @@ namespace DotCMIS.Client.Impl
                 GenerateCacheKey();
             }
         }
+
+        public Dictionary<string, string> CustomParameters { get { return customParameters; } set { customParameters = value; } }
 
         public string FilterString
         {

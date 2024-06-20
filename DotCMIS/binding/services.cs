@@ -40,7 +40,7 @@ namespace DotCMIS.Binding.Services
 
     public interface INavigationService
     {
-        IObjectInFolderList GetChildren(string repositoryId, string folderId, string filter, string orderBy,
+        IObjectInFolderList GetChildren(string repositoryId, string folderId, string filter, Dictionary<string, string> customParameters, string orderBy,
             bool? includeAllowableActions, IncludeRelationshipsFlag? includeRelationships, string renditionFilter,
             bool? includePathSegment, long? maxItems, long? skipCount, IExtensionsData extension);
 
@@ -68,6 +68,8 @@ namespace DotCMIS.Binding.Services
         string CreateDocument(string repositoryId, IProperties properties, string folderId, IContentStream contentStream,
             VersioningState? versioningState, IList<string> policies, IAcl addAces, IAcl removeAces, IExtensionsData extension);
 
+        string CreateItem(string repositoryId, IProperties properties, string folderId);
+
         string CreateDocumentFromSource(string repositoryId, string sourceId, IProperties properties, string folderId,
             VersioningState? versioningState, IList<string> policies, IAcl addAces, IAcl removeAces, IExtensionsData extension);
 
@@ -80,6 +82,8 @@ namespace DotCMIS.Binding.Services
         string CreatePolicy(string repositoryId, IProperties properties, string folderId, IList<string> policies,
             IAcl addAces, IAcl removeAces, IExtensionsData extension);
 
+        IEnumerable<string> BulkUpdate(string repositoryId, IProperties properties, IList<string> policies,
+    IAcl addAces, IAcl removeAces, IExtensionsData extension);
         IAllowableActions GetAllowableActions(string repositoryId, string objectId, IExtensionsData extension);
 
         IProperties GetProperties(string repositoryId, string objectId, string filter, IExtensionsData extension);

@@ -88,6 +88,11 @@ namespace DotCMIS.Binding
             Cookies = new CookieContainer();
         }
 
+        private string GetBearerToken()
+        {
+            return Session.GetValue(SessionParameter.BearerToken) as string;
+        }
+
         public override void Authenticate(object connection)
         {
             HttpWebRequest request = connection as HttpWebRequest;
@@ -116,6 +121,12 @@ namespace DotCMIS.Binding
                 {
                     request.Headers.Add("Authorization", "Basic " + Convert.ToBase64String(System.Text.Encoding.ASCII.GetBytes((user ?? "") + ":" + (password ?? ""))));
                 }
+            }
+            else
+            {
+                var bearerToken = GetBearerToken();
+                if (!string.IsNullOrEmpty(bearerToken))
+                    request.Headers["Authorization"] = $"Bearer {bearerToken}";
             }
         }
 

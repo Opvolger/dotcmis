@@ -19,15 +19,10 @@ namespace DotCMISUnitTest
         {
             Dictionary<string, string> parameters = new Dictionary<string, string>();
 
-            string baseUrlAtom = "http://localhost:8080/inmemory/atom";
-            //string baseUrlAtom = "http://cmis.alfresco.com/cmisatom";
-           
-            string baseUrlWS = "http://localhost:8080/inmemory/services";
-
             parameters[SessionParameter.BindingType] = BindingType.AtomPub;
-            parameters[SessionParameter.AtomPubUrl] = baseUrlAtom;
-            parameters[SessionParameter.User] = "admin";
-            parameters[SessionParameter.Password] = "admin";
+            parameters[SessionParameter.AtomPubUrl] = AppSettingsHelper.GetAppSetting(SessionParameter.AtomPubUrl);
+            parameters[SessionParameter.User] = AppSettingsHelper.GetAppSetting(SessionParameter.User);
+            parameters[SessionParameter.Password] = AppSettingsHelper.GetAppSetting(SessionParameter.Password);
 
             SessionFactory factory = SessionFactory.NewInstance();
             ISession session = factory.GetRepositories(parameters)[0].CreateSession();
@@ -45,7 +40,7 @@ namespace DotCMISUnitTest
                 counter++;
             }
 
-            Assert.AreEqual(numOfDocuments, counter);
+            Assert.That(counter, Is.EqualTo(numOfDocuments));
 
             counter = 0;
             foreach (ICmisObject child in folder.GetChildren(oc).GetPage(150))
@@ -54,7 +49,7 @@ namespace DotCMISUnitTest
                 counter++;
             }
 
-            Assert.AreEqual(150, counter);
+            Assert.That(counter, Is.EqualTo(150));
 
             counter = 0;
             foreach (ICmisObject child in folder.GetChildren(oc).SkipTo(20).GetPage(180))
@@ -63,7 +58,7 @@ namespace DotCMISUnitTest
                 counter++;
             }
 
-            Assert.AreEqual(180, counter);
+            Assert.That(counter, Is.EqualTo(180));
 
             folder.DeleteTree(true, null, true);
         }

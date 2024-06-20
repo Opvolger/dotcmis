@@ -52,6 +52,7 @@
       <xs:enumeration value="cmis:folder" />
       <xs:enumeration value="cmis:relationship" />
       <xs:enumeration value="cmis:policy" />
+	  <xs:enumeration value="cmis:item" />
     </xs:restriction>
   </xs:simpleType>
   <xs:simpleType name="enumCapabilityQuery">

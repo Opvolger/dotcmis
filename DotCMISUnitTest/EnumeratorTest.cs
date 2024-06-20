@@ -59,13 +59,13 @@ namespace DotCMISUnitTest
         [Test]
         public void TestIteration()
         {
-            Assert.AreEqual(source.Count, testEnumerable.TotalNumItems);
-            Assert.AreEqual(PageSize, testEnumerable.PageNumItems);
+            Assert.That(testEnumerable.TotalNumItems, Is.EqualTo(source.Count));
+            Assert.That(testEnumerable.PageNumItems, Is.EqualTo(PageSize));
 
             int i = 0;
             foreach (int x in testEnumerable)
             {
-                Assert.AreEqual(i, x);
+                Assert.That(x, Is.EqualTo(i));
                 i++;
             }
         }
@@ -76,11 +76,11 @@ namespace DotCMISUnitTest
             int i = 42;
             foreach (int x in testEnumerable.SkipTo(42))
             {
-                Assert.AreEqual(i, x);
+                Assert.That(x, Is.EqualTo(i));
                 i++;
             }
 
-            Assert.AreEqual(source.Count, i);
+            Assert.That(i, Is.EqualTo(source.Count));
         }
 
         [Test]
@@ -98,11 +98,11 @@ namespace DotCMISUnitTest
             int i = 0;
             foreach (int x in testEnumerable.GetPage(8))
             {
-                Assert.AreEqual(i, x);
+                Assert.That(x, Is.EqualTo(i));
                 i++;
             }
 
-            Assert.AreEqual(8, i);
+            Assert.That(i, Is.EqualTo(8));
         }
 
         [Test]
@@ -111,11 +111,11 @@ namespace DotCMISUnitTest
             int i = 0;
             foreach (int x in testEnumerable.GetPage(source.Count * 2))
             {
-                Assert.AreEqual(i, x);
+                Assert.That(x, Is.EqualTo(i));
                 i++;
             }
 
-            Assert.AreEqual(source.Count, i);
+            Assert.That(i, Is.EqualTo(source.Count));
         }
 
         [Test]
@@ -124,11 +124,11 @@ namespace DotCMISUnitTest
             int i = 42;
             foreach (int x in testEnumerable.SkipTo(42).GetPage(20))
             {
-                Assert.AreEqual(i, x);
+                Assert.That(x, Is.EqualTo(i));
                 i++;
             }
 
-            Assert.AreEqual(62, i);
+            Assert.That(i, Is.EqualTo(62));
         }
     }
 }

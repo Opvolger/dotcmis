@@ -19,18 +19,18 @@ rem    specific language governing permissions and limitations
 rem    under the License.
 rem
 
-rem This batch file creates the Debug DLL, the Release DLL and the documentation.
-rem It requires the .NET Framework 3.5, Sandcastle and Sandcastle Help File Builder.
+rem This batch file creates the Debug DLL, the Release DLL.
+rem It requires the dotnet 8 SDK
 
 echo Removing old DLLs
 rmdir /Q /S bin
 rmdir /Q /S obj
 
 echo Building Debug DLL...
-msbuild DotCMIS.csproj /ToolsVersion:3.5 /p:Configuration=Debug
+dotnet build DotCMIS.csproj -c Debug
 
 echo Building Release DLL...
-msbuild DotCMIS.csproj /ToolsVersion:3.5 /p:Configuration=Release
+dotnet build DotCMIS.csproj -c Release
 
-echo Building documentation...
-msbuild DotCMIS.shfbproj /p:Configuration=Release
+echo Building NugetPackage...
+dotnet pack DotCMIS.csproj -c Release

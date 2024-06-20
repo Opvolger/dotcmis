@@ -546,7 +546,7 @@ namespace DotCMIS.Binding.WebServices
             Provider = provider;
         }
 
-        public IObjectInFolderList GetChildren(string repositoryId, string folderId, string filter, string orderBy,
+        public IObjectInFolderList GetChildren(string repositoryId, string folderId, string filter, Dictionary<string, string> customParameters, string orderBy,
             bool? includeAllowableActions, IncludeRelationshipsFlag? includeRelationships, string renditionFilter,
             bool? includePathSegment, long? maxItems, long? skipCount, IExtensionsData extension)
         {
@@ -749,6 +749,28 @@ namespace DotCMIS.Binding.WebServices
             }
         }
 
+        public string CreateItem(string repositoryId, IProperties properties, string folderId)
+        {
+            var port = Provider.GetObjectService();
+
+            try
+            {
+                var objectId = port.createItem(repositoryId, Converter.Convert(properties), folderId);
+
+                //Converter.ConvertExtension(cmisExtension, extension);
+
+                return objectId;
+            }
+            catch (FaultException<cmisFaultType> fe)
+            {
+                throw ConvertException(fe);
+            }
+            catch (Exception e)
+            {
+                throw new CmisRuntimeException("Error: " + e.Message, e);
+            }
+        }
+
         public string CreateDocumentFromSource(string repositoryId, string sourceId, IProperties properties, string folderId,
             VersioningState? versioningState, IList<string> policies, IAcl addAces, IAcl removeAces, IExtensionsData extension)
         {
@@ -844,6 +866,32 @@ namespace DotCMIS.Binding.WebServices
                 Converter.ConvertExtension(cmisExtension, extension);
 
                 return objectId;
+            }
+            catch (FaultException<cmisFaultType> fe)
+            {
+                throw ConvertException(fe);
+            }
+            catch (Exception e)
+            {
+                throw new CmisRuntimeException("Error: " + e.Message, e);
+            }
+        }
+
+        public IEnumerable<string> BulkUpdate(string repositoryId, IProperties properties, IList<string> policies, IAcl addAces, IAcl removeAces,
+    IExtensionsData extension)
+        {
+            var port = Provider.GetObjectService();
+
+            try
+            {
+                var cmisExtension = Converter.ConvertExtension(extension);
+
+                var objectIds = port.bulkUpdate(repositoryId, Converter.Convert(properties),
+                    Converter.ConvertList(policies), Converter.Convert(addAces), Converter.Convert(removeAces), ref cmisExtension);
+
+                Converter.ConvertExtension(cmisExtension, extension);
+
+                return objectIds;
             }
             catch (FaultException<cmisFaultType> fe)
             {

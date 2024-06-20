@@ -117,6 +117,11 @@ namespace DotCMIS.Data
     {
     }
 
+    public interface IItemTypeDefinition : ITypeDefinition
+    {
+
+    }
+
     public interface IRelationshipTypeDefinition : ITypeDefinition
     {
         IList<string> AllowedSourceTypeIds { get; }
@@ -146,7 +151,7 @@ namespace DotCMIS.Data
         string Description { get; }
         PropertyType PropertyType { get; }
         Cardinality Cardinality { get; }
-        Updatability Updatability { get; }
+        Updatability Updatability { get; set; }
         bool? IsInherited { get; }
         bool? IsRequired { get; }
         bool? IsQueryable { get; }

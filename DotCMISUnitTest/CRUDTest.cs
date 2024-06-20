@@ -28,21 +28,21 @@ namespace DotCMISUnitTest
         [Test]
         public void TestRepositoryInfo()
         {
-            Assert.NotNull(RepositoryInfo.Id);
-            Assert.NotNull(RepositoryInfo.Name);
-            Assert.NotNull(RepositoryInfo.RootFolderId);
+            Assert.That(RepositoryInfo.Id, Is.Not.Null);
+            Assert.That(RepositoryInfo.Name, Is.Not.Null);
+            Assert.That(RepositoryInfo.RootFolderId, Is.Not.Null);
         }
 
         [Test]
         public void TestRootFolder()
         {
             IObjectData rootFolder = GetFullObject(RepositoryInfo.RootFolderId);
-            Assert.AreEqual(BaseTypeId.CmisFolder, rootFolder.BaseTypeId);
+            Assert.That(rootFolder.BaseTypeId, Is.EqualTo(BaseTypeId.CmisFolder));
 
             IObjectData rootFolder2 = Binding.GetObjectService().GetObjectByPath(RepositoryInfo.Id, "/", null, true, IncludeRelationshipsFlag.Both, null, true, true, null);
-            Assert.AreEqual(BaseTypeId.CmisFolder, rootFolder2.BaseTypeId);
+            Assert.That(rootFolder2.BaseTypeId, Is.EqualTo(BaseTypeId.CmisFolder));
 
-            Assert.AreEqual(rootFolder.Id, rootFolder2.Id);
+            Assert.That(rootFolder2.Id, Is.EqualTo(rootFolder.Id));
         }
 
         [Test]
@@ -53,7 +53,7 @@ namespace DotCMISUnitTest
             IObjectData doc = CreateDocument(TestFolder.Id, "dottest", content1);
 
             string content2 = GetTextContent(doc.Id);
-            Assert.AreEqual(content1, content2);
+            Assert.That(content2, Is.EqualTo(content1));
 
             DeleteObject(doc.Id);
         }

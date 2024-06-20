@@ -38,15 +38,15 @@ namespace DotCMISUnitTest
         [Test]
         public void SmokeTestSession()
         {
-            Assert.NotNull(Session);
-            Assert.NotNull(Session.Binding);
-            Assert.NotNull(Session.RepositoryInfo);
-            Assert.NotNull(Session.RepositoryInfo.Id);
-            Assert.NotNull(Session.RepositoryInfo.RootFolderId);
-            Assert.NotNull(Session.DefaultContext);
-            Assert.NotNull(Session.ObjectFactory);
+            Assert.That(Session, Is.Not.Null);
+            Assert.That(Session.Binding, Is.Not.Null);
+            Assert.That(Session.RepositoryInfo, Is.Not.Null);
+            Assert.That(Session.RepositoryInfo.Id, Is.Not.Null);
+            Assert.That(Session.RepositoryInfo.RootFolderId, Is.Not.Null);
+            Assert.That(Session.DefaultContext, Is.Not.Null);
+            Assert.That(Session.ObjectFactory, Is.Not.Null);
 
-            Assert.AreEqual("test", Session.CreateObjectId("test").Id);
+            Assert.That(Session.CreateObjectId("test").Id, Is.EqualTo("test"));
         }
 
         [Test]
@@ -54,40 +54,40 @@ namespace DotCMISUnitTest
         {
             // getTypeDefinition
             IObjectType documentType = Session.GetTypeDefinition("cmis:document");
-            Assert.NotNull(documentType);
-            Assert.True(documentType is DocumentType);
-            Assert.AreEqual("cmis:document", documentType.Id);
-            Assert.AreEqual(BaseTypeId.CmisDocument, documentType.BaseTypeId);
-            Assert.True(documentType.IsBaseType);
-            Assert.IsNullOrEmpty(documentType.ParentTypeId);
-            Assert.NotNull(documentType.PropertyDefinitions);
-            Assert.True(documentType.PropertyDefinitions.Count >= 9);
+            Assert.That(documentType, Is.Not.Null);
+            Assert.That(documentType is DocumentType, Is.True);
+            Assert.That(documentType.Id, Is.EqualTo("cmis:document"));
+            Assert.That(documentType.BaseTypeId, Is.EqualTo(BaseTypeId.CmisDocument));
+            Assert.That(documentType.IsBaseType, Is.True);
+            Assert.That(documentType.ParentTypeId, Is.Null);
+            Assert.That(documentType.PropertyDefinitions, Is.Not.Null);
+            Assert.That(documentType.PropertyDefinitions.Count >= 9, Is.True);
 
             IObjectType folderType = Session.GetTypeDefinition("cmis:folder");
-            Assert.NotNull(folderType);
-            Assert.True(folderType is FolderType);
-            Assert.AreEqual("cmis:folder", folderType.Id);
-            Assert.AreEqual(BaseTypeId.CmisFolder, folderType.BaseTypeId);
-            Assert.True(folderType.IsBaseType);
-            Assert.IsNullOrEmpty(folderType.ParentTypeId);
-            Assert.NotNull(folderType.PropertyDefinitions);
-            Assert.True(folderType.PropertyDefinitions.Count >= 9);
+            Assert.That(folderType, Is.Not.Null);
+            Assert.That(folderType is FolderType, Is.True);
+            Assert.That(folderType.Id, Is.EqualTo("cmis:folder"));
+            Assert.That(folderType.BaseTypeId, Is.EqualTo(BaseTypeId.CmisFolder));
+            Assert.That(folderType.IsBaseType, Is.True);
+            Assert.That(folderType.ParentTypeId, Is.Null);
+            Assert.That(folderType.PropertyDefinitions, Is.Not.Null);
+            Assert.That(folderType.PropertyDefinitions.Count >= 9, Is.True);
 
             // getTypeChildren
             Session.Clear();
 
             IItemEnumerable<IObjectType> children = Session.GetTypeChildren(null, true);
-            Assert.NotNull(children);
+            Assert.That(children, Is.Not.Null);
 
             int count;
             count = 0;
             foreach (IObjectType type in children)
             {
-                Assert.NotNull(type);
-                Assert.NotNull(type.Id);
-                Assert.True(type.IsBaseType);
-                Assert.IsNullOrEmpty(type.ParentTypeId);
-                Assert.NotNull(type.PropertyDefinitions);
+                Assert.That(type, Is.Not.Null);
+                Assert.That(type.Id, Is.Not.Null);
+                Assert.That(type.IsBaseType, Is.True);
+                Assert.That(type.ParentTypeId, Is.Null);
+                Assert.That(type.PropertyDefinitions, Is.Not.Null);
 
                 Session.Clear();
                 IObjectType type2 = Session.GetTypeDefinition(type.Id);
@@ -98,8 +98,8 @@ namespace DotCMISUnitTest
                 count++;
             }
 
-            Assert.True(count >= 2);
-            Assert.True(count <= 4);
+            Assert.That(count >= 2, Is.True);
+            Assert.That(count <= 5, Is.True);
 
             // getTypeDescendants
             Session.Clear();
@@ -109,15 +109,15 @@ namespace DotCMISUnitTest
             count = 0;
             foreach (ITree<IObjectType> tree in descendants)
             {
-                Assert.NotNull(tree);
-                Assert.NotNull(tree.Item);
+                Assert.That(tree, Is.Not.Null);
+                Assert.That(tree.Item, Is.Not.Null);
 
                 IObjectType type = tree.Item;
-                Assert.NotNull(type);
-                Assert.NotNull(type.Id);
-                Assert.True(type.IsBaseType);
-                Assert.IsNullOrEmpty(type.ParentTypeId);
-                Assert.NotNull(type.PropertyDefinitions);
+                Assert.That(type, Is.Not.Null);
+                Assert.That(type.Id, Is.Not.Null);
+                Assert.That(type.IsBaseType, Is.True);
+                Assert.That(type.ParentTypeId, Is.Null);
+                Assert.That(type.PropertyDefinitions, Is.Not.Null);
 
                 Session.Clear();
                 IObjectType type2 = Session.GetTypeDefinition(type.Id);
@@ -128,8 +128,8 @@ namespace DotCMISUnitTest
                 count++;
             }
 
-            Assert.True(count >= 2);
-            Assert.True(count <= 4);
+            Assert.That(count >= 2, Is.True);
+            Assert.That(count <= 5, Is.True);
         }
 
         [Test]
@@ -137,26 +137,26 @@ namespace DotCMISUnitTest
         {
             ICmisObject rootFolderObject = Session.GetRootFolder();
 
-            Assert.NotNull(rootFolderObject);
-            Assert.NotNull(rootFolderObject.Id);
-            Assert.True(rootFolderObject is IFolder);
+            Assert.That(rootFolderObject, Is.Not.Null);
+            Assert.That(rootFolderObject.Id, Is.Not.Null);
+            Assert.That(rootFolderObject is IFolder, Is.True);
 
             IFolder rootFolder = (IFolder)rootFolderObject;
 
-            Assert.AreEqual("/", rootFolder.Path);
-            Assert.AreEqual(1, rootFolder.Paths.Count);
+            Assert.That(rootFolder.Path, Is.EqualTo("/"));
+            Assert.That(rootFolder.Paths.Count, Is.EqualTo(1));
 
-            Assert.NotNull(rootFolder.AllowableActions);
-            Assert.True(rootFolder.AllowableActions.Actions.Contains(Actions.CanGetProperties));
-            Assert.False(rootFolder.AllowableActions.Actions.Contains(Actions.CanGetFolderParent));
+            Assert.That(rootFolder.AllowableActions, Is.Not.Null);
+            Assert.That(rootFolder.AllowableActions.Actions.Contains(Actions.CanGetProperties), Is.True);
+            Assert.That(rootFolder.AllowableActions.Actions.Contains(Actions.CanGetFolderParent), Is.False);
 
             IItemEnumerable<ICmisObject> children = rootFolder.GetChildren();
-            Assert.NotNull(children);
+            Assert.That(children, Is.Not.Null);
             foreach (ICmisObject child in children)
             {
-                Assert.NotNull(child);
-                Assert.NotNull(child.Id);
-                Assert.NotNull(child.Name);
+                Assert.That(child, Is.Not.Null);
+                Assert.That(child.Id, Is.Not.Null);
+                Assert.That(child.Name, Is.Not.Null);
                 Console.WriteLine(child.Name + " (" + child.Id + ")");
             }
         }
@@ -165,12 +165,12 @@ namespace DotCMISUnitTest
         public void SmokeTestQuery()
         {
             IItemEnumerable<IQueryResult> qr = Session.Query("SELECT * FROM cmis:document", false);
-            Assert.NotNull(qr);
+            Assert.That(qr, Is.Not.Null);
 
             foreach (IQueryResult hit in qr)
             {
-                Assert.NotNull(hit);
-                Assert.NotNull(hit["cmis:objectId"]);
+                Assert.That(hit, Is.Not.Null);
+                Assert.That(hit["cmis:objectId"], Is.Not.Null);
                 Console.WriteLine(hit.GetPropertyValueById(PropertyIds.Name) + " (" + hit.GetPropertyValueById(PropertyIds.ObjectId) + ")");
 
                 foreach (IPropertyData prop in hit.Properties)
@@ -199,29 +199,29 @@ namespace DotCMISUnitTest
             IDocument doc = TestFolder.CreateDocument(properties, contentStream, null);
 
             // check doc
-            Assert.NotNull(doc);
-            Assert.NotNull(doc.Id);
-            Assert.AreEqual(properties[PropertyIds.Name], doc.Name);
-            Assert.AreEqual(BaseTypeId.CmisDocument, doc.BaseTypeId);
-            Assert.True(doc.AllowableActions.Actions.Contains(Actions.CanGetProperties));
-            Assert.False(doc.AllowableActions.Actions.Contains(Actions.CanGetChildren));
+            Assert.That(doc, Is.Not.Null);
+            Assert.That(doc.Id, Is.Not.Null);
+            Assert.That(doc.Name, Is.EqualTo(properties[PropertyIds.Name]));
+            Assert.That(doc.BaseTypeId, Is.EqualTo(BaseTypeId.CmisDocument));
+            Assert.That(doc.AllowableActions.Actions.Contains(Actions.CanGetProperties), Is.True);
+            Assert.That(doc.AllowableActions.Actions.Contains(Actions.CanGetChildren), Is.False);
 
             // check type
             IObjectType type = doc.ObjectType;
-            Assert.NotNull(type);
-            Assert.NotNull(type.Id);
-            Assert.AreEqual(properties[PropertyIds.ObjectTypeId], type.Id);
+            Assert.That(type, Is.Not.Null);
+            Assert.That(type.Id, Is.Not.Null);
+            Assert.That(type.Id, Is.EqualTo(properties[PropertyIds.ObjectTypeId]));
 
             // check versions
             IList<IDocument> versions = doc.GetAllVersions();
-            Assert.NotNull(versions);
-            Assert.AreEqual(1, versions.Count);
+            Assert.That(versions, Is.Not.Null);
+            Assert.That(versions.Count, Is.EqualTo(1));
             //Assert.AreEqual(doc.Id, versions[0].Id);
 
             // check content
             IContentStream retrievedContentStream = doc.GetContentStream();
-            Assert.NotNull(retrievedContentStream);
-            Assert.NotNull(retrievedContentStream.Stream);
+            Assert.That(retrievedContentStream, Is.Not.Null);
+            Assert.That(retrievedContentStream.Stream, Is.Not.Null);
 
             MemoryStream byteStream = new MemoryStream();
             byte[] buffer = new byte[4096];
@@ -233,11 +233,11 @@ namespace DotCMISUnitTest
             }
 
             byte[] retrievedContent = byteStream.ToArray();
-            Assert.NotNull(retrievedContent);
-            Assert.AreEqual(content.Length, retrievedContent.Length);
+            Assert.That(retrievedContent, Is.Not.Null);
+            Assert.That(retrievedContent.Length, Is.EqualTo(content.Length));
             for (int i = 0; i < content.Length; i++)
             {
-                Assert.AreEqual(content[i], retrievedContent[i]);
+                Assert.That(retrievedContent[i], Is.EqualTo(content[i]));
             }
 
             // update name
@@ -247,16 +247,16 @@ namespace DotCMISUnitTest
             IObjectId newId = doc.UpdateProperties(properties);
             IDocument doc2 = Session.GetObject(newId) as IDocument;
 
-            Assert.NotNull(doc2);
+            Assert.That(doc2, Is.Not.Null);
 
             doc2.Refresh();
-            Assert.AreEqual(properties[PropertyIds.Name], doc2.Name);
-            Assert.AreEqual(properties[PropertyIds.Name], doc2.GetPropertyValue(PropertyIds.Name));
+            Assert.That(doc2.Name, Is.EqualTo(properties[PropertyIds.Name]));
+            Assert.That(doc2.GetPropertyValue(PropertyIds.Name), Is.EqualTo(properties[PropertyIds.Name]));
 
             IProperty nameProperty = doc2[PropertyIds.Name];
-            Assert.NotNull(nameProperty.PropertyType);
-            Assert.AreEqual(properties[PropertyIds.Name], nameProperty.Value);
-            Assert.AreEqual(properties[PropertyIds.Name], nameProperty.FirstValue);
+            Assert.That(nameProperty.PropertyType, Is.Not.Null);
+            Assert.That(nameProperty.Value, Is.EqualTo(properties[PropertyIds.Name]));
+            Assert.That(nameProperty.FirstValue, Is.EqualTo(properties[PropertyIds.Name]));
 
 
             byte[] content2 = UTF8Encoding.UTF8.GetBytes("Hello Universe!");
@@ -287,50 +287,50 @@ namespace DotCMISUnitTest
             properties[PropertyIds.ObjectTypeId] = DefaultDocumentType;
 
             IDocument doc = TestFolder.CreateDocument(properties, null, VersioningState.Major);
-            Assert.NotNull(doc);
-            Assert.NotNull(doc.Id);
-            Assert.AreEqual(properties[PropertyIds.Name], doc.Name);
+            Assert.That(doc, Is.Not.Null);
+            Assert.That(doc.Id, Is.Not.Null);
+            Assert.That(doc.Name, Is.EqualTo(properties[PropertyIds.Name]));
 
             IList<IDocument> versions = doc.GetAllVersions();
-            Assert.NotNull(versions);
-            Assert.AreEqual(1, versions.Count);
+            Assert.That(versions, Is.Not.Null);
+            Assert.That(versions.Count, Is.EqualTo(1));
 
             IObjectId pwcId = doc.CheckOut();
-            Assert.NotNull(pwcId);
+            Assert.That(pwcId, Is.Not.Null);
 
             IDocument pwc = Session.GetObject(pwcId) as IDocument;
 
             // check PWC
-            Assert.NotNull(pwc);
-            Assert.NotNull(pwc.Id);
-            Assert.AreEqual(BaseTypeId.CmisDocument, doc.BaseTypeId);
+            Assert.That(pwc, Is.Not.Null);
+            Assert.That(pwc.Id, Is.Not.Null);
+            Assert.That(doc.BaseTypeId, Is.EqualTo(BaseTypeId.CmisDocument));
 
             IDictionary<string, object> newProperties = new Dictionary<string, object>();
             newProperties[PropertyIds.Name] = "test-version2-smoke.txt";
 
             IObjectId doc2Id = pwc.CheckIn(true, newProperties, null, "new DotCMIS version");
-            Assert.NotNull(doc2Id);
+            Assert.That(doc2Id, Is.Not.Null);
 
             IDocument doc2 = Session.GetObject(doc2Id) as IDocument;
             doc2.Refresh();
 
             // check new version
-            Assert.NotNull(doc2);
-            Assert.NotNull(doc2.Id);
+            Assert.That(doc2, Is.Not.Null);
+            Assert.That(doc2.Id, Is.Not.Null);
             // Assert.AreEqual(newProperties[PropertyIds.Name], doc2.Name);
-            Assert.AreEqual(BaseTypeId.CmisDocument, doc2.BaseTypeId);
+            Assert.That(doc2.BaseTypeId, Is.EqualTo(BaseTypeId.CmisDocument));
 
             versions = doc2.GetAllVersions();
-            Assert.NotNull(versions);
-            Assert.AreEqual(2, versions.Count);
+            Assert.That(versions, Is.Not.Null);
+            Assert.That(versions.Count, Is.EqualTo(2));
 
             IDocument last1 = doc.GetObjectOfLatestVersion(false);
-            Assert.AreEqual(doc2.Id, last1.Id);
+            Assert.That(last1.Id, Is.EqualTo(doc2.Id));
 
             IOperationContext oc = Session.CreateOperationContext();
             oc.CacheEnabled = false;
             IDocument last2 = Session.GetLatestDocumentVersion(doc.Id, oc);
-            Assert.AreEqual(doc2.Id, last2.Id);
+            Assert.That(last2.Id, Is.EqualTo(doc2.Id));
 
             doc2.DeleteAllVersions();
 
@@ -352,20 +352,20 @@ namespace DotCMISUnitTest
             IFolder folder = TestFolder.CreateFolder(properties);
 
             // check folder
-            Assert.NotNull(folder);
-            Assert.NotNull(folder.Id);
-            Assert.AreEqual(properties[PropertyIds.Name], folder.Name);
-            Assert.AreEqual(BaseTypeId.CmisFolder, folder.BaseTypeId);
-            Assert.AreEqual(TestFolder.Id, folder.FolderParent.Id);
-            Assert.False(folder.IsRootFolder);
-            Assert.True(folder.Path.StartsWith("/"));
-            Assert.True(folder.AllowableActions.Actions.Contains(Actions.CanGetProperties));
-            Assert.True(folder.AllowableActions.Actions.Contains(Actions.CanGetChildren));
-            Assert.False(folder.AllowableActions.Actions.Contains(Actions.CanGetContentStream));
+            Assert.That(folder, Is.Not.Null);
+            Assert.That(folder.Id, Is.Not.Null);
+            Assert.That(folder.Name, Is.EqualTo(properties[PropertyIds.Name]));
+            Assert.That(folder.BaseTypeId, Is.EqualTo(BaseTypeId.CmisFolder));
+            Assert.That(folder.FolderParent.Id, Is.EqualTo(TestFolder.Id));
+            Assert.That(folder.IsRootFolder, Is.False);
+            Assert.That(folder.Path.StartsWith("/"), Is.True);
+            Assert.That(folder.AllowableActions.Actions.Contains(Actions.CanGetProperties), Is.True);
+            Assert.That(folder.AllowableActions.Actions.Contains(Actions.CanGetChildren), Is.True);
+            Assert.That(folder.AllowableActions.Actions.Contains(Actions.CanGetContentStream), Is.False);
 
             // rename folder
             folder.Rename("test-smoke-renamed");
-            Assert.AreEqual("test-smoke-renamed", folder.Name);
+            Assert.That(folder.Name, Is.EqualTo("test-smoke-renamed"));
 
             // check children
             foreach (ICmisObject cmisObject in folder.GetChildren())
@@ -413,12 +413,12 @@ namespace DotCMISUnitTest
 
             // check parents
             IFolder parent = folder.FolderParent;
-            Assert.NotNull(parent);
-            Assert.AreEqual(TestFolder.Id, parent.Id);
+            Assert.That(parent, Is.Not.Null);
+            Assert.That(parent.Id, Is.EqualTo(TestFolder.Id));
 
             IList<IFolder> parents = folder.Parents;
-            Assert.NotNull(parents);
-            Assert.True(parents.Count > 0);
+            Assert.That(parents, Is.Not.Null);
+            Assert.That(parents.Count > 0, Is.True);
 
             bool found = false;
             foreach (IFolder p in parents)
@@ -429,7 +429,7 @@ namespace DotCMISUnitTest
                     break;
                 }
             }
-            Assert.True(found);
+            Assert.That(found, Is.True);
 
             folder.Delete(true);
 
@@ -449,7 +449,7 @@ namespace DotCMISUnitTest
                 if (Session.RepositoryInfo.Capabilities.ChangesCapability != CapabilityChanges.None)
                 {
                     IChangeEvents changeEvents = Session.GetContentChanges(null, true, 1000);
-                    Assert.NotNull(changeEvents);
+                    Assert.That(changeEvents, Is.Not.Null);
                 }
                 else
                 {
